@@ -1,0 +1,528 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AC22EC1A1E2AF0D0003433D1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AC22EC191E2AF0D0003433D1 /* main.m */; };
+		AC22EC1D1E2AF0D0003433D1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AC22EC1C1E2AF0D0003433D1 /* AppDelegate.m */; };
+		AC22EC201E2AF0D0003433D1 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC22EC1F1E2AF0D0003433D1 /* ViewController.m */; };
+		AC22EC231E2AF0D0003433D1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC22EC211E2AF0D0003433D1 /* Main.storyboard */; };
+		AC22EC251E2AF0D0003433D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC22EC241E2AF0D0003433D1 /* Assets.xcassets */; };
+		AC22EC281E2AF0D0003433D1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC22EC261E2AF0D0003433D1 /* LaunchScreen.storyboard */; };
+		AC22EC331E2AF0D0003433D1 /* eyedentifyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AC22EC321E2AF0D0003433D1 /* eyedentifyTests.m */; };
+		AC22EC3E1E2AF0D0003433D1 /* eyedentifyUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = AC22EC3D1E2AF0D0003433D1 /* eyedentifyUITests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		AC22EC2F1E2AF0D0003433D1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AC22EC0D1E2AF0D0003433D1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AC22EC141E2AF0D0003433D1;
+			remoteInfo = eyedentify;
+		};
+		AC22EC3A1E2AF0D0003433D1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AC22EC0D1E2AF0D0003433D1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AC22EC141E2AF0D0003433D1;
+			remoteInfo = eyedentify;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		AC22EC151E2AF0D0003433D1 /* eyedentify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = eyedentify.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC22EC191E2AF0D0003433D1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		AC22EC1B1E2AF0D0003433D1 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		AC22EC1C1E2AF0D0003433D1 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		AC22EC1E1E2AF0D0003433D1 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		AC22EC1F1E2AF0D0003433D1 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		AC22EC221E2AF0D0003433D1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		AC22EC241E2AF0D0003433D1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AC22EC271E2AF0D0003433D1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		AC22EC291E2AF0D0003433D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AC22EC2E1E2AF0D0003433D1 /* eyedentifyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = eyedentifyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC22EC321E2AF0D0003433D1 /* eyedentifyTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = eyedentifyTests.m; sourceTree = "<group>"; };
+		AC22EC341E2AF0D0003433D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AC22EC391E2AF0D0003433D1 /* eyedentifyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = eyedentifyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC22EC3D1E2AF0D0003433D1 /* eyedentifyUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = eyedentifyUITests.m; sourceTree = "<group>"; };
+		AC22EC3F1E2AF0D0003433D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AC22EC121E2AF0D0003433D1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AC22EC2B1E2AF0D0003433D1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AC22EC361E2AF0D0003433D1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AC22EC0C1E2AF0D0003433D1 = {
+			isa = PBXGroup;
+			children = (
+				AC22EC171E2AF0D0003433D1 /* eyedentify */,
+				AC22EC311E2AF0D0003433D1 /* eyedentifyTests */,
+				AC22EC3C1E2AF0D0003433D1 /* eyedentifyUITests */,
+				AC22EC161E2AF0D0003433D1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AC22EC161E2AF0D0003433D1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AC22EC151E2AF0D0003433D1 /* eyedentify.app */,
+				AC22EC2E1E2AF0D0003433D1 /* eyedentifyTests.xctest */,
+				AC22EC391E2AF0D0003433D1 /* eyedentifyUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AC22EC171E2AF0D0003433D1 /* eyedentify */ = {
+			isa = PBXGroup;
+			children = (
+				AC22EC1B1E2AF0D0003433D1 /* AppDelegate.h */,
+				AC22EC1C1E2AF0D0003433D1 /* AppDelegate.m */,
+				AC22EC1E1E2AF0D0003433D1 /* ViewController.h */,
+				AC22EC1F1E2AF0D0003433D1 /* ViewController.m */,
+				AC22EC211E2AF0D0003433D1 /* Main.storyboard */,
+				AC22EC241E2AF0D0003433D1 /* Assets.xcassets */,
+				AC22EC261E2AF0D0003433D1 /* LaunchScreen.storyboard */,
+				AC22EC291E2AF0D0003433D1 /* Info.plist */,
+				AC22EC181E2AF0D0003433D1 /* Supporting Files */,
+			);
+			path = eyedentify;
+			sourceTree = "<group>";
+		};
+		AC22EC181E2AF0D0003433D1 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				AC22EC191E2AF0D0003433D1 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		AC22EC311E2AF0D0003433D1 /* eyedentifyTests */ = {
+			isa = PBXGroup;
+			children = (
+				AC22EC321E2AF0D0003433D1 /* eyedentifyTests.m */,
+				AC22EC341E2AF0D0003433D1 /* Info.plist */,
+			);
+			path = eyedentifyTests;
+			sourceTree = "<group>";
+		};
+		AC22EC3C1E2AF0D0003433D1 /* eyedentifyUITests */ = {
+			isa = PBXGroup;
+			children = (
+				AC22EC3D1E2AF0D0003433D1 /* eyedentifyUITests.m */,
+				AC22EC3F1E2AF0D0003433D1 /* Info.plist */,
+			);
+			path = eyedentifyUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AC22EC141E2AF0D0003433D1 /* eyedentify */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AC22EC421E2AF0D0003433D1 /* Build configuration list for PBXNativeTarget "eyedentify" */;
+			buildPhases = (
+				AC22EC111E2AF0D0003433D1 /* Sources */,
+				AC22EC121E2AF0D0003433D1 /* Frameworks */,
+				AC22EC131E2AF0D0003433D1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = eyedentify;
+			productName = eyedentify;
+			productReference = AC22EC151E2AF0D0003433D1 /* eyedentify.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AC22EC2D1E2AF0D0003433D1 /* eyedentifyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AC22EC451E2AF0D0003433D1 /* Build configuration list for PBXNativeTarget "eyedentifyTests" */;
+			buildPhases = (
+				AC22EC2A1E2AF0D0003433D1 /* Sources */,
+				AC22EC2B1E2AF0D0003433D1 /* Frameworks */,
+				AC22EC2C1E2AF0D0003433D1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AC22EC301E2AF0D0003433D1 /* PBXTargetDependency */,
+			);
+			name = eyedentifyTests;
+			productName = eyedentifyTests;
+			productReference = AC22EC2E1E2AF0D0003433D1 /* eyedentifyTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		AC22EC381E2AF0D0003433D1 /* eyedentifyUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AC22EC481E2AF0D0003433D1 /* Build configuration list for PBXNativeTarget "eyedentifyUITests" */;
+			buildPhases = (
+				AC22EC351E2AF0D0003433D1 /* Sources */,
+				AC22EC361E2AF0D0003433D1 /* Frameworks */,
+				AC22EC371E2AF0D0003433D1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AC22EC3B1E2AF0D0003433D1 /* PBXTargetDependency */,
+			);
+			name = eyedentifyUITests;
+			productName = eyedentifyUITests;
+			productReference = AC22EC391E2AF0D0003433D1 /* eyedentifyUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AC22EC0D1E2AF0D0003433D1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = "The Three Bruhsketeers";
+				TargetAttributes = {
+					AC22EC141E2AF0D0003433D1 = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+					};
+					AC22EC2D1E2AF0D0003433D1 = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = AC22EC141E2AF0D0003433D1;
+					};
+					AC22EC381E2AF0D0003433D1 = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = AC22EC141E2AF0D0003433D1;
+					};
+				};
+			};
+			buildConfigurationList = AC22EC101E2AF0D0003433D1 /* Build configuration list for PBXProject "eyedentify" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AC22EC0C1E2AF0D0003433D1;
+			productRefGroup = AC22EC161E2AF0D0003433D1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AC22EC141E2AF0D0003433D1 /* eyedentify */,
+				AC22EC2D1E2AF0D0003433D1 /* eyedentifyTests */,
+				AC22EC381E2AF0D0003433D1 /* eyedentifyUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AC22EC131E2AF0D0003433D1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AC22EC281E2AF0D0003433D1 /* LaunchScreen.storyboard in Resources */,
+				AC22EC251E2AF0D0003433D1 /* Assets.xcassets in Resources */,
+				AC22EC231E2AF0D0003433D1 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AC22EC2C1E2AF0D0003433D1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AC22EC371E2AF0D0003433D1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AC22EC111E2AF0D0003433D1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AC22EC201E2AF0D0003433D1 /* ViewController.m in Sources */,
+				AC22EC1D1E2AF0D0003433D1 /* AppDelegate.m in Sources */,
+				AC22EC1A1E2AF0D0003433D1 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AC22EC2A1E2AF0D0003433D1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AC22EC331E2AF0D0003433D1 /* eyedentifyTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AC22EC351E2AF0D0003433D1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AC22EC3E1E2AF0D0003433D1 /* eyedentifyUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AC22EC301E2AF0D0003433D1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AC22EC141E2AF0D0003433D1 /* eyedentify */;
+			targetProxy = AC22EC2F1E2AF0D0003433D1 /* PBXContainerItemProxy */;
+		};
+		AC22EC3B1E2AF0D0003433D1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AC22EC141E2AF0D0003433D1 /* eyedentify */;
+			targetProxy = AC22EC3A1E2AF0D0003433D1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		AC22EC211E2AF0D0003433D1 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AC22EC221E2AF0D0003433D1 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		AC22EC261E2AF0D0003433D1 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AC22EC271E2AF0D0003433D1 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		AC22EC401E2AF0D0003433D1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		AC22EC411E2AF0D0003433D1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		AC22EC431E2AF0D0003433D1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = eyedentify/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Mlab-Technologies.eyedentify";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		AC22EC441E2AF0D0003433D1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = eyedentify/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Mlab-Technologies.eyedentify";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		AC22EC461E2AF0D0003433D1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = eyedentifyTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Mlab-Technologies.eyedentifyTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/eyedentify.app/eyedentify";
+			};
+			name = Debug;
+		};
+		AC22EC471E2AF0D0003433D1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = eyedentifyTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Mlab-Technologies.eyedentifyTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/eyedentify.app/eyedentify";
+			};
+			name = Release;
+		};
+		AC22EC491E2AF0D0003433D1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = eyedentifyUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Mlab-Technologies.eyedentifyUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = eyedentify;
+			};
+			name = Debug;
+		};
+		AC22EC4A1E2AF0D0003433D1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = eyedentifyUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Mlab-Technologies.eyedentifyUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = eyedentify;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AC22EC101E2AF0D0003433D1 /* Build configuration list for PBXProject "eyedentify" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AC22EC401E2AF0D0003433D1 /* Debug */,
+				AC22EC411E2AF0D0003433D1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AC22EC421E2AF0D0003433D1 /* Build configuration list for PBXNativeTarget "eyedentify" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AC22EC431E2AF0D0003433D1 /* Debug */,
+				AC22EC441E2AF0D0003433D1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		AC22EC451E2AF0D0003433D1 /* Build configuration list for PBXNativeTarget "eyedentifyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AC22EC461E2AF0D0003433D1 /* Debug */,
+				AC22EC471E2AF0D0003433D1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		AC22EC481E2AF0D0003433D1 /* Build configuration list for PBXNativeTarget "eyedentifyUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AC22EC491E2AF0D0003433D1 /* Debug */,
+				AC22EC4A1E2AF0D0003433D1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AC22EC0D1E2AF0D0003433D1 /* Project object */;
+}
