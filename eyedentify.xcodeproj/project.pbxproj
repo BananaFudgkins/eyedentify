@@ -15,6 +15,7 @@
 		AC22EC281E2AF0D0003433D1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC22EC261E2AF0D0003433D1 /* LaunchScreen.storyboard */; };
 		AC22EC331E2AF0D0003433D1 /* eyedentifyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AC22EC321E2AF0D0003433D1 /* eyedentifyTests.m */; };
 		AC22EC3E1E2AF0D0003433D1 /* eyedentifyUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = AC22EC3D1E2AF0D0003433D1 /* eyedentifyUITests.m */; };
+		AC7E5E741E2AF15800EAFCA5 /* OverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC7E5E731E2AF15800EAFCA5 /* OverlayViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,8 @@
 		AC22EC391E2AF0D0003433D1 /* eyedentifyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = eyedentifyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC22EC3D1E2AF0D0003433D1 /* eyedentifyUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = eyedentifyUITests.m; sourceTree = "<group>"; };
 		AC22EC3F1E2AF0D0003433D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AC7E5E721E2AF15800EAFCA5 /* OverlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayViewController.h; sourceTree = "<group>"; };
+		AC7E5E731E2AF15800EAFCA5 /* OverlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +108,8 @@
 				AC22EC1C1E2AF0D0003433D1 /* AppDelegate.m */,
 				AC22EC1E1E2AF0D0003433D1 /* ViewController.h */,
 				AC22EC1F1E2AF0D0003433D1 /* ViewController.m */,
+				AC7E5E721E2AF15800EAFCA5 /* OverlayViewController.h */,
+				AC7E5E731E2AF15800EAFCA5 /* OverlayViewController.m */,
 				AC22EC211E2AF0D0003433D1 /* Main.storyboard */,
 				AC22EC241E2AF0D0003433D1 /* Assets.xcassets */,
 				AC22EC261E2AF0D0003433D1 /* LaunchScreen.storyboard */,
@@ -276,6 +281,7 @@
 				AC22EC201E2AF0D0003433D1 /* ViewController.m in Sources */,
 				AC22EC1D1E2AF0D0003433D1 /* AppDelegate.m in Sources */,
 				AC22EC1A1E2AF0D0003433D1 /* main.m in Sources */,
+				AC7E5E741E2AF15800EAFCA5 /* OverlayViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -505,6 +511,7 @@
 				AC22EC441E2AF0D0003433D1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		AC22EC451E2AF0D0003433D1 /* Build configuration list for PBXNativeTarget "eyedentifyTests" */ = {
 			isa = XCConfigurationList;
@@ -513,6 +520,7 @@
 				AC22EC471E2AF0D0003433D1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		AC22EC481E2AF0D0003433D1 /* Build configuration list for PBXNativeTarget "eyedentifyUITests" */ = {
 			isa = XCConfigurationList;
@@ -521,6 +529,7 @@
 				AC22EC4A1E2AF0D0003433D1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
