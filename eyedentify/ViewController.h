@@ -13,8 +13,18 @@
 #import <CoreImage/CoreImage.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import <ImageIO/ImageIO.h>
+#import <SpeechKit/SpeechKit.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <AVSpeechSynthesizerDelegate, SpeechKitDelegate, SKRecognizerDelegate> {
+    SKRecognizer *voiceSearch;
+    enum {
+        TS_IDLE,
+        TS_INITIAL,
+        TS_RECORDING,
+        TS_PROCESSING,
+    } transactionState;
+}
+
 @property(nonatomic, retain) AVCaptureStillImageOutput *stillImageOutput;
 @property(nonatomic, retain) IBOutlet UIImageView *vImage;
 
