@@ -199,7 +199,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
         dispatch_async(dispatch_get_main_queue(), ^{
             [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
                 overlayViewController.logoView.frame = CGRectMake(overlayViewController.logoView.frame.origin.x, overlayViewController.logoView.frame.origin.y - 400, overlayViewController.logoView.frame.size.width,
-                                                                  overlayViewController.suggestionView.frame.size.height);
+                                                                  overlayViewController.logoView.frame.size.height);
                 overlayViewController.suggestionView.frame = CGRectMake(overlayViewController.suggestionView.frame.origin.x, overlayViewController.suggestionView.frame.origin.y - 600, overlayViewController.suggestionView.frame.size.width,
                                                                         overlayViewController.suggestionView.frame.size.height);
             } completion:^(BOOL finished) {
@@ -213,10 +213,10 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
             [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
                 overlayViewController.logoView.frame = CGRectMake(37, 50, overlayViewController.logoView.frame.size.width,
                                                                   overlayViewController.logoView.frame.size.height);
-                overlayViewController.suggestionView.frame = CGRectMake(37, 377, overlayViewController.logoView.frame.size.width,
-                                                                        overlayViewController.logoView.frame.size.height);
+                overlayViewController.suggestionView.frame = CGRectMake(37, 377, overlayViewController.suggestionView.frame.size.width, overlayViewController.suggestionView.frame.size.height);
             } completion:^(BOOL finished) {
                 NSLog(@"The second animation finished.");
+                self.shouldRevert = NO;
             }];
         });
     }

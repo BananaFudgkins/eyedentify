@@ -29,6 +29,7 @@
 @property(nonatomic, retain) IBOutlet UIImageView *vImage;
 @property (strong, nonatomic) IBOutlet UIButton *fullScreenButton;
 @property (nonatomic) BOOL shouldRevert;
+@property (strong, nonatomic) IBOutlet UILabel *recognizedObjectLabel;
 
 @end
 
