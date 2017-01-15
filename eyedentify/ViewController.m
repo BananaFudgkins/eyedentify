@@ -16,6 +16,22 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    AVCaptureSession *captureSession = [AVCaptureSession new];
+    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    NSError *error;
+    AVCaptureDeviceInput *cameraInput = [[AVCaptureDeviceInput alloc]initWithDevice:device error:&error];
+    AVCaptureVideoPreviewLayer *previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:captureSession];
+    
+    [captureSession addInput:cameraInput];
+    [captureSession startRunning];
+    
+    UIView *cameraView = [[UIView alloc]initWithFrame:self.view.frame];
+    previewLayer.frame = cameraView.bounds;
+    [cameraView.layer addSublayer:previewLayer];
+    
+    [self.view addSubview:cameraView];
+
     // Do any additional setup after loading the view, typically from a nib.
 }
 

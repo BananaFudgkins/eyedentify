@@ -16,6 +16,8 @@
 		AC22EC331E2AF0D0003433D1 /* eyedentifyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AC22EC321E2AF0D0003433D1 /* eyedentifyTests.m */; };
 		AC22EC3E1E2AF0D0003433D1 /* eyedentifyUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = AC22EC3D1E2AF0D0003433D1 /* eyedentifyUITests.m */; };
 		AC7E5E741E2AF15800EAFCA5 /* OverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC7E5E731E2AF15800EAFCA5 /* OverlayViewController.m */; };
+		AC7E5E771E2AF1C500EAFCA5 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC7E5E761E2AF1C500EAFCA5 /* AVKit.framework */; };
+		AC7E5E791E2AF1CB00EAFCA5 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC7E5E781E2AF1CB00EAFCA5 /* AVFoundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +56,8 @@
 		AC22EC3F1E2AF0D0003433D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AC7E5E721E2AF15800EAFCA5 /* OverlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayViewController.h; sourceTree = "<group>"; };
 		AC7E5E731E2AF15800EAFCA5 /* OverlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayViewController.m; sourceTree = "<group>"; };
+		AC7E5E761E2AF1C500EAFCA5 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
+		AC7E5E781E2AF1CB00EAFCA5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +65,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC7E5E791E2AF1CB00EAFCA5 /* AVFoundation.framework in Frameworks */,
+				AC7E5E771E2AF1C500EAFCA5 /* AVKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,6 +94,7 @@
 				AC22EC311E2AF0D0003433D1 /* eyedentifyTests */,
 				AC22EC3C1E2AF0D0003433D1 /* eyedentifyUITests */,
 				AC22EC161E2AF0D0003433D1 /* Products */,
+				AC7E5E751E2AF1C500EAFCA5 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -143,6 +150,15 @@
 				AC22EC3F1E2AF0D0003433D1 /* Info.plist */,
 			);
 			path = eyedentifyUITests;
+			sourceTree = "<group>";
+		};
+		AC7E5E751E2AF1C500EAFCA5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AC7E5E781E2AF1CB00EAFCA5 /* AVFoundation.framework */,
+				AC7E5E761E2AF1C500EAFCA5 /* AVKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -212,6 +228,7 @@
 				TargetAttributes = {
 					AC22EC141E2AF0D0003433D1 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = NLW324UDS8;
 						ProvisioningStyle = Automatic;
 					};
 					AC22EC2D1E2AF0D0003433D1 = {
@@ -428,6 +445,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = NLW324UDS8;
 				INFOPLIST_FILE = eyedentify/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Mlab-Technologies.eyedentify";
@@ -439,6 +457,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = NLW324UDS8;
 				INFOPLIST_FILE = eyedentify/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Mlab-Technologies.eyedentify";
