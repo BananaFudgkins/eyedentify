@@ -20,6 +20,7 @@
 #import <MetalKit/MetalKit.h>
 #import "FGTranslator.h"
 #import "AFNetworking.h"
+#import "KVNProgress.h"
 
 @interface ViewController : UIViewController <AVSpeechSynthesizerDelegate, SpeechKitDelegate, SKRecognizerDelegate> {
     SKRecognizer *voiceSearch;

@@ -117,6 +117,8 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
 - (void)recognizerDidFinishRecording:(SKRecognizer *)recognizer {
     NSLog(@"Recording finished");
     transactionState = TS_PROCESSING;
+    
+    //[KVNProgress showWithStatus:@"Processing..."];
 }
 
 - (void)recognizer:(SKRecognizer *)recognizer didFinishWithResults:(SKRecognition *)results {
@@ -169,7 +171,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
             [self runNeuralNet];
         });
     }
-    else if ([recognizedText containsString:@"am I looking at now"] || [recognizedText containsString:@"hat is this now"] || [recognizedText containsString:@"hat about now"] || [recognizedText containsString:@"and now"]) {
+    else if ([recognizedText containsString:@"am I looking at now"] || [recognizedText containsString:@"hat is this now"] || [recognizedText containsString:@"hat about now"] || [recognizedText containsString:@"And now"]) {
         
         group = dispatch_group_create();
         [self grabFrameFromVideo];
@@ -195,6 +197,10 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
 
 - (void)recognizer:(SKRecognizer *)recognizer didFinishWithError:(NSError *)error suggestion:(NSString *)suggestion {
 
+}
+
+- (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didStartSpeechUtterance:(AVSpeechUtterance *)utterance {
+    //[KVNProgress dismiss];
 }
 
 - (void)speechSynthesizer:(AVSpeechSynthesizer *)returnSynthesizer didFinishSpeechUtterance:(AVSpeechUtterance *)utterance {
