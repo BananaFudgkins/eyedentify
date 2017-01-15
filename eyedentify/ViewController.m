@@ -32,6 +32,7 @@
     UIView *cameraView;
     UIPinchGestureRecognizer *pinchRecognizer;
     UITapGestureRecognizer *tapGestureRecognizer;
+    BOOL isRecording;
 }
 
 @end
@@ -93,7 +94,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     synthesizer = [[AVSpeechSynthesizer alloc]init];
     [synthesizer setDelegate:self];
-    AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"Welcome to eyedentify.  Please say a command or touch the screen after the vibration."];
+    AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"Welcome to eyedentify.  After the vibration, please say a command or tap the screen ."];
     [utterance setRate:.5];
     [synthesizer speakUtterance:utterance];
     
@@ -103,9 +104,11 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     [self.view addGestureRecognizer:pinchRecognizer];
     
     tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleTap)];
+    [tapGestureRecognizer setDelegate:self];
     [self.view addGestureRecognizer:tapGestureRecognizer];
     touchesActive = NO;
     
+    isRecording = NO;
     // Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -117,6 +120,8 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
 - (void)recognizerDidBeginRecording:(SKRecognizer *)recognizer {
     NSLog(@"Recording started");
     transactionState = TS_RECORDING;
+    
+    isRecording = YES;
     //[KVNProgress showSuccessWithStatus:@"Began Listening"];
 }
 
@@ -134,7 +139,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    if ([touch view] == self.fullScreenButton){
+    if ([touch view] == self.fullScreenButton || isRecording == NO){
         // If it is, prevent all of the delegate's gesture recognizers
         // from receiving the touch
         return NO;
@@ -146,6 +151,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     NSLog(@"Recording finished");
     transactionState = TS_PROCESSING;
     
+    isRecording = NO;
     //[KVNProgress showWithStatus:@"Processing..."];
 }
 
