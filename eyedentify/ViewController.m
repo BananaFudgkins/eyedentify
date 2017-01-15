@@ -45,27 +45,6 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    
-    //Initialize speech recognition framework
-    
-    [SpeechKit setupWithID:@"NMDPPRODUCTION_Michael_Royzen_Readr_20150405205027"
-                      host:@"dhw.nmdp.nuancemobility.net"
-                      port:443
-                    useSSL:YES
-                  delegate:nil];
-    
-    //Initialize Metal and neural net
-    
-    device = MTLCreateSystemDefaultDevice();
-    
-    commandQueue = [device newCommandQueue];
-    
-    textureLoader = [[MTKTextureLoader alloc]initWithDevice:device];
-    
-    Net = [[Inception3Net alloc]initWithCommandQueue:commandQueue];
-    
-    ciContext = [CIContext contextWithMTLDevice:device];
-    
     //Initialize live camera preview
     
     AVCaptureSession *captureSession = [AVCaptureSession new];
@@ -91,14 +70,39 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     
     [self.view addSubview:cameraView];
     
-    self.vImage = [[UIImageView alloc]init];
-    
     //Initialize and add the graphical overlay as a subview
     
     overlayViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"OverlayViewController"];
     [self.view addSubview:overlayViewController.view];
     
     [self.view addSubview:self.fullScreenButton];
+    // Do any additional setup after loading the view, typically from a nib.
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    //Initialize speech recognition framework
+    
+    [SpeechKit setupWithID:@"NMDPPRODUCTION_Michael_Royzen_Readr_20150405205027"
+                      host:@"dhw.nmdp.nuancemobility.net"
+                      port:443
+                    useSSL:YES
+                  delegate:nil];
+    
+    //Initialize Metal and neural net
+    
+    device = MTLCreateSystemDefaultDevice();
+    
+    commandQueue = [device newCommandQueue];
+    
+    textureLoader = [[MTKTextureLoader alloc]initWithDevice:device];
+    
+    Net = [[Inception3Net alloc]initWithCommandQueue:commandQueue];
+    
+    ciContext = [CIContext contextWithMTLDevice:device];
+    
+    self.vImage = [[UIImageView alloc]init];
     
     recognitionLanguage = @"English";
     
@@ -122,7 +126,6 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     touchesActive = NO;
     
     isRecording = NO;
-    // Do any additional setup after loading the view, typically from a nib.
 }
 
 - (void)didReceiveMemoryWarning {
