@@ -13,6 +13,18 @@
     AVSpeechSynthesizer *synthesizer;
     NSString *recognizedText;
     OverlayViewController *overlayViewController;
+    NSString *recognitionLanguage;
+    
+    Inception3Net *Net;
+    id <MTLDevice> device;
+    id <MTLCommandQueue> commandQueue;
+    int imageNum;
+    int total;
+    MTKTextureLoader *textureLoader;
+    CIContext *ciContext;
+    id <MTLTexture> sourceTexture;
+    
+    NSString *neuralNetworkResult;
 }
 
 @end
@@ -30,6 +42,16 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
                       port:443
                     useSSL:YES
                   delegate:nil];
+    
+    device = MTLCreateSystemDefaultDevice();
+    
+    commandQueue = [device newCommandQueue];
+    
+    textureLoader = [[MTKTextureLoader alloc]initWithDevice:device];
+    
+    Net = [[Inception3Net alloc]initWithCommandQueue:commandQueue];
+    
+    ciContext = [CIContext contextWithMTLDevice:device];
     
     AVCaptureSession *captureSession = [AVCaptureSession new];
     AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
@@ -58,6 +80,8 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     [self.view addSubview:overlayViewController.view];
     
     [self.view addSubview:self.fullScreenButton];
+    
+    recognitionLanguage = @"English";
     
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     synthesizer = [[AVSpeechSynthesizer alloc]init];
@@ -95,36 +119,62 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     if ([recognizedText containsString:@"in French"]) {
+        recognitionLanguage = @"French";
         
+        group = dispatch_group_create();
+        [self grabFrameFromVideo];
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            //Grab still frame from video and run neural net once that completes
+            [self runNeuralNet];
+        });
     }
     else if ([recognizedText containsString:@"in Spanish"]) {
+        recognitionLanguage = @"Spanish";
         
+        group = dispatch_group_create();
+        [self grabFrameFromVideo];
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            //Grab still frame from video and run neural net once that completes
+            [self runNeuralNet];
+        });
     }
     else if ([recognizedText containsString:@"in Russian"]) {
-        synthesizer = [[AVSpeechSynthesizer alloc]init];
-        [synthesizer setDelegate:self];
-        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a thing."];
-        [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"ru-RU"]];
+        recognitionLanguage = @"Russian";
+        
         group = dispatch_group_create();
         [self grabFrameFromVideo];
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-            
+            //Grab still frame from video and run neural net once that completes
+            [self runNeuralNet];
         });
-        [utterance setRate:.5];
-        [synthesizer speakUtterance:utterance];
-
+    }
+    else if ([recognizedText containsString:@"in English"]) {
+        recognitionLanguage = @"English";
+        
+        group = dispatch_group_create();
+        [self grabFrameFromVideo];
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            //Grab still frame from video and run neural net once that completes
+            [self runNeuralNet];
+        });
+    }
+    else if ([recognizedText containsString:@"am I looking at now"] || [recognizedText containsString:@"hat is this now"]) {
+        
+        group = dispatch_group_create();
+        [self grabFrameFromVideo];
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            //Grab still frame from video and run neural net once that completes
+            [self runNeuralNet];
+        });
     }
     else if ([recognizedText containsString:@"am I looking at"] || [recognizedText containsString:@"hat is this"]) {
-        synthesizer = [[AVSpeechSynthesizer alloc]init];
-        [synthesizer setDelegate:self];
-        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a thing."];
+        
         group = dispatch_group_create();
         [self grabFrameFromVideo];
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-            
+            //Grab still frame from video and run neural net once that completes
+            [self runNeuralNet];
         });
-        [utterance setRate:.5];
-        [synthesizer speakUtterance:utterance];
     }
     else {
         //restart speech recognition
@@ -139,6 +189,54 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
 - (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didFinishSpeechUtterance:(AVSpeechUtterance *)utterance {
     //re-start the recognition
     [self beginSpeechRecognition];
+}
+
+- (void)runNeuralNet {
+    //Run network
+    
+    struct CGImage *cgImg = [self.vImage.image CGImage];
+    
+    sourceTexture = [textureLoader newTextureWithCGImage:cgImg options:nil error:nil];
+    
+    @autoreleasepool {
+        id <MTLCommandBuffer> commandBuffer = [commandQueue commandBuffer];
+        [Net forwardWithCommandBuffer:commandBuffer sourceTexture:sourceTexture];
+        
+        [commandBuffer commit];
+        [commandBuffer waitUntilCompleted];
+        
+        NSString *labelString = [Net getLabel];
+        
+        //extract top result from neural net results
+        //neuralNetworkResult = [[labelString componentsSeparatedByString:@"/n"] objectAtIndex:0];
+        __block NSString *secondLine = nil;
+        int counter = 0;
+        [labelString enumerateLinesUsingBlock:^(NSString *line, BOOL *stop) {
+            //firstLine = [[line retain] autorelease];
+            *stop = YES;
+        }];
+        NSLog(@"Result: %@", labelString);
+    }
+    
+    //speak results
+    if ([recognitionLanguage isEqualToString:@"English"]) {
+        //Speak in English
+    }
+    else if ([recognitionLanguage isEqualToString:@"French"]) {
+        //Speak in French
+    }
+    else if ([recognitionLanguage isEqualToString:@"Spanish"]) {
+        //Speak in Spanish
+    }
+    else if ([recognitionLanguage isEqualToString:@"Russian"]) {
+        //Speak in Russian
+        synthesizer = [[AVSpeechSynthesizer alloc]init];
+        [synthesizer setDelegate:self];
+        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a thing."];
+        [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"ru-RU"]];
+        [utterance setRate:.5];
+        [synthesizer speakUtterance:utterance];
+    }
 }
 
 - (void)grabFrameFromVideo {
