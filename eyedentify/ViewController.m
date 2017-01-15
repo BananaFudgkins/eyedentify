@@ -11,6 +11,7 @@
 @interface ViewController () {
     dispatch_group_t group;
     AVSpeechSynthesizer *synthesizer;
+    NSString *recognizedText;
 }
 
 @end
@@ -57,12 +58,6 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     
     [self.view addSubview:self.fullScreenButton];
     
-    group = dispatch_group_create();
-    [self grabFrameFromVideo];
-    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-        
-    });
-    
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     synthesizer = [[AVSpeechSynthesizer alloc]init];
     [synthesizer setDelegate:self];
@@ -93,7 +88,9 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     NSLog(@"Got results");
     NSLog(@"Session ID: [%@].", [SpeechKit sessionID]);
     
-    NSString *recognizedText = [results firstResult];
+    
+    recognizedText = [results firstResult];
+    NSLog(@"Recognized text: %@", recognizedText);
     
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     if ([recognizedText containsString:@"in French"]) {
@@ -103,10 +100,34 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
         
     }
     else if ([recognizedText containsString:@"in Russian"]) {
-        
+        synthesizer = [[AVSpeechSynthesizer alloc]init];
+        [synthesizer setDelegate:self];
+        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a thing."];
+        [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"ru-RU"]];
+        group = dispatch_group_create();
+        [self grabFrameFromVideo];
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            
+        });
+        [utterance setRate:.5];
+        [synthesizer speakUtterance:utterance];
+
     }
-    else if ([recognizedText containsString:@"in Russian"]) {
-        
+    else if ([recognizedText containsString:@"am I looking at"] || [recognizedText containsString:@"hat is this"]) {
+        synthesizer = [[AVSpeechSynthesizer alloc]init];
+        [synthesizer setDelegate:self];
+        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a thing."];
+        group = dispatch_group_create();
+        [self grabFrameFromVideo];
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            
+        });
+        [utterance setRate:.5];
+        [synthesizer speakUtterance:utterance];
+    }
+    else {
+        //restart speech recognition
+        [self performSelector:@selector(beginSpeechRecognition) withObject:nil afterDelay:0.01];
     }
 }
 
