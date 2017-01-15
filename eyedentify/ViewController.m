@@ -98,6 +98,9 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchToZoomRecognizer:)];
     [self.view addGestureRecognizer:pinchRecognizer];
     
+    self.recognizedObjectLabel.hidden = YES;
+    [self.view addSubview:self.recognizedObjectLabel];
+    
     // Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -177,6 +180,10 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
                 [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"fr-FR"]];
                 [utterance setRate:.5];
                 [synthesizer speakUtterance:utterance];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.recognizedObjectLabel.text = translated;
+                    self.recognizedObjectLabel.hidden = NO;
+                });
             }];
         }
         else if ([recognitionLanguage isEqualToString:@"Spanish"]) {
@@ -191,6 +198,10 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
                 [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"es-ES"]];
                 [utterance setRate:.5];
                 [synthesizer speakUtterance:utterance];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.recognizedObjectLabel.text = translated;
+                    self.recognizedObjectLabel.hidden = NO;
+                });
             }];
         }
         else if ([recognitionLanguage isEqualToString:@"Russian"]) {
@@ -205,6 +216,10 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
                 [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"ru-RU"]];
                 [utterance setRate:.5];
                 [synthesizer speakUtterance:utterance];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.recognizedObjectLabel.text = translated;
+                    self.recognizedObjectLabel.hidden = NO;
+                });
             }];
         }
         else if ([recognitionLanguage isEqualToString:@"English"]) {
@@ -249,13 +264,13 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
         secondLine = [[secondLine componentsSeparatedByString:@", "] objectAtIndex:0];
         neuralNetworkResult = secondLine;
         NSLog(@"Result: %@", secondLine);
+        [KVNProgress dismiss];
         [self speakResults];
     }
 }
 
 - (void)speakResults {
     //speak results
-    
     if ([recognitionLanguage isEqualToString:@"English"]) {
         //Speak in English
         synthesizer = [[AVSpeechSynthesizer alloc]init];
