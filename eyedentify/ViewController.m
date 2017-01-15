@@ -25,6 +25,9 @@
     id <MTLTexture> sourceTexture;
     
     NSString *neuralNetworkResult;
+    AVCaptureDevice *captureDevice;
+    UIView *cameraView;
+    UIPinchGestureRecognizer *pinchRecognizer;
 }
 
 @end
@@ -54,9 +57,9 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     ciContext = [CIContext contextWithMTLDevice:device];
     
     AVCaptureSession *captureSession = [AVCaptureSession new];
-    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    captureDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     NSError *error;
-    AVCaptureDeviceInput *cameraInput = [[AVCaptureDeviceInput alloc]initWithDevice:device error:&error];
+    AVCaptureDeviceInput *cameraInput = [[AVCaptureDeviceInput alloc]initWithDevice:captureDevice error:&error];
     AVCaptureVideoPreviewLayer *previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:captureSession];
     self.shouldRevert = NO;
     
@@ -68,7 +71,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     [captureSession addOutput:stillImageOutput];
     [captureSession startRunning];
     
-    UIView *cameraView = [[UIView alloc]initWithFrame:self.view.frame];
+    cameraView = [[UIView alloc]initWithFrame:self.view.frame];
     previewLayer.frame = cameraView.bounds;
     [cameraView.layer addSublayer:previewLayer];
     
@@ -89,6 +92,9 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"Welcome to eyedentify."];
     [utterance setRate:.5];
     [synthesizer speakUtterance:utterance];
+    
+    pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchToZoomRecognizer:)];
+    [self.view addGestureRecognizer:pinchRecognizer];
     
     // Do any additional setup after loading the view, typically from a nib.
 }
@@ -289,6 +295,22 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
                                            detection:detectionType
                                             language:@"en_US"
                                             delegate:self];
+}
+
+- (void)handlePinchToZoomRecognizer:(UIPinchGestureRecognizer *)pinchRecognizer {
+    NSLog(@"The view should start zooming");
+    const CGFloat pinchVelocityDividerFactor = 5.0f;
+    
+    if (pinchRecognizer.state == UIGestureRecognizerStateChanged) {
+        NSError *error = nil;
+        if ([captureDevice lockForConfiguration:&error]) {
+            CGFloat desiredZoomFactor = captureDevice.videoZoomFactor + atan2f(pinchRecognizer.velocity, pinchVelocityDividerFactor);
+            captureDevice.videoZoomFactor = MAX(1.0, MIN(desiredZoomFactor, captureDevice.activeFormat.videoMaxZoomFactor));
+            [captureDevice unlockForConfiguration];
+        } else {
+            NSLog(@"Oh shit an error occurred: %@", error);
+        }
+    }
 }
 
 - (IBAction)fullScreenPressed:(UIButton *)sender {
