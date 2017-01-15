@@ -25,16 +25,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-+ (void)animateEverything {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-            
-        } completion:^(BOOL finished) {
-            NSLog(@"The animation finished.");
-        }];
-    });
-}
-
 /*
 #pragma mark - Navigation
 

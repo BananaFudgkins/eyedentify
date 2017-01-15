@@ -11,7 +11,11 @@
 @interface ViewController () {
     dispatch_group_t group;
     AVSpeechSynthesizer *synthesizer;
+<<<<<<< HEAD
     NSString *recognizedText;
+=======
+    OverlayViewController *overlayViewController;
+>>>>>>> 41958e8188b1e14aadabd5aff1492e6b3eba69d4
 }
 
 @end
@@ -53,7 +57,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     
     self.vImage = [[UIImageView alloc]init];
     
-    OverlayViewController *overlayViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"OverlayViewController"];
+    overlayViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"OverlayViewController"];
     [self.view addSubview:overlayViewController.view];
     
     [self.view addSubview:self.fullScreenButton];
@@ -195,12 +199,29 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
 - (IBAction)fullScreenPressed:(UIButton *)sender {
     if (self.shouldRevert == NO) {
         [sender setTitle:@"Revert" forState:UIControlStateNormal];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"animateUp" object:nil];
-        
-        self.shouldRevert = YES;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+                overlayViewController.logoView.frame = CGRectMake(overlayViewController.logoView.frame.origin.x, overlayViewController.logoView.frame.origin.y - 400, overlayViewController.logoView.frame.size.width,
+                                                                  overlayViewController.suggestionView.frame.size.height);
+                overlayViewController.suggestionView.frame = CGRectMake(overlayViewController.suggestionView.frame.origin.x, overlayViewController.suggestionView.frame.origin.y - 600, overlayViewController.suggestionView.frame.size.width,
+                                                                        overlayViewController.suggestionView.frame.size.height);
+            } completion:^(BOOL finished) {
+                NSLog(@"The animation finished.");
+                self.shouldRevert = YES;
+            }];
+        });
     } else if (self.shouldRevert == YES) {
         [sender setTitle:@"Full Screen" forState:UIControlStateNormal];
-        self.shouldRevert = NO;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+                overlayViewController.logoView.frame = CGRectMake(37, 50, overlayViewController.logoView.frame.size.width,
+                                                                  overlayViewController.logoView.frame.size.height);
+                overlayViewController.suggestionView.frame = CGRectMake(37, 377, overlayViewController.logoView.frame.size.width,
+                                                                        overlayViewController.logoView.frame.size.height);
+            } completion:^(BOOL finished) {
+                NSLog(@"The second animation finished.");
+            }];
+        });
     }
 }
 
