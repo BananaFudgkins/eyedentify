@@ -136,6 +136,8 @@
                     </view>
                     <connections>
                         <outlet property="iconBackground" destination="gzG-EL-PXe" id="A3l-5S-l7U"/>
+                        <outlet property="logoView" destination="Ng0-Yv-5gJ" id="brK-ed-2Dx"/>
+                        <outlet property="suggestionView" destination="jRF-Sj-gqu" id="HY2-NF-F01"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pd2-er-Oao" userLabel="First Responder" sceneMemberID="firstResponder"/>

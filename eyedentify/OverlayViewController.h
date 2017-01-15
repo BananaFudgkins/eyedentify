@@ -11,5 +11,8 @@
 @interface OverlayViewController : UIViewController
 
 @property (strong, nonatomic) IBOutlet UIView *iconBackground;
++ (void)animateEverything;
+@property (strong, nonatomic) IBOutlet UIView *logoView;
+@property (strong, nonatomic) IBOutlet UIView *suggestionView;
 
 @end
