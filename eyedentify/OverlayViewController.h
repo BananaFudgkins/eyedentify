@@ -10,4 +10,6 @@
 
 @interface OverlayViewController : UIViewController
 
+@property (strong, nonatomic) IBOutlet UIView *iconBackground;
+
 @end
