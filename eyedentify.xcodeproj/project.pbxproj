@@ -18,6 +18,9 @@
 		AC7E5E741E2AF15800EAFCA5 /* OverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC7E5E731E2AF15800EAFCA5 /* OverlayViewController.m */; };
 		AC7E5E771E2AF1C500EAFCA5 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC7E5E761E2AF1C500EAFCA5 /* AVKit.framework */; };
 		AC7E5E791E2AF1CB00EAFCA5 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC7E5E781E2AF1CB00EAFCA5 /* AVFoundation.framework */; };
+		AC7E5E7B1E2AFB8900EAFCA5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC7E5E7A1E2AFB8900EAFCA5 /* CoreGraphics.framework */; };
+		AC7E5E7D1E2AFBAD00EAFCA5 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC7E5E7C1E2AFBAD00EAFCA5 /* CoreImage.framework */; };
+		AC7E5E7F1E2AFBD800EAFCA5 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC7E5E7E1E2AFBD800EAFCA5 /* ImageIO.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +61,9 @@
 		AC7E5E731E2AF15800EAFCA5 /* OverlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayViewController.m; sourceTree = "<group>"; };
 		AC7E5E761E2AF1C500EAFCA5 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		AC7E5E781E2AF1CB00EAFCA5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		AC7E5E7A1E2AFB8900EAFCA5 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		AC7E5E7C1E2AFBAD00EAFCA5 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
+		AC7E5E7E1E2AFBD800EAFCA5 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +71,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC7E5E7F1E2AFBD800EAFCA5 /* ImageIO.framework in Frameworks */,
+				AC7E5E7D1E2AFBAD00EAFCA5 /* CoreImage.framework in Frameworks */,
+				AC7E5E7B1E2AFB8900EAFCA5 /* CoreGraphics.framework in Frameworks */,
 				AC7E5E791E2AF1CB00EAFCA5 /* AVFoundation.framework in Frameworks */,
 				AC7E5E771E2AF1C500EAFCA5 /* AVKit.framework in Frameworks */,
 			);
@@ -155,6 +164,9 @@
 		AC7E5E751E2AF1C500EAFCA5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AC7E5E7E1E2AFBD800EAFCA5 /* ImageIO.framework */,
+				AC7E5E7C1E2AFBAD00EAFCA5 /* CoreImage.framework */,
+				AC7E5E7A1E2AFB8900EAFCA5 /* CoreGraphics.framework */,
 				AC7E5E781E2AF1CB00EAFCA5 /* AVFoundation.framework */,
 				AC7E5E761E2AF1C500EAFCA5 /* AVKit.framework */,
 			);

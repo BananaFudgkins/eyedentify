@@ -10,9 +10,13 @@
 #import <AVKit/AVKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import "OverlayViewController.h"
+#import <CoreImage/CoreImage.h>
+#import <CoreGraphics/CoreGraphics.h>
+#import <ImageIO/ImageIO.h>
 
 @interface ViewController : UIViewController
-
+@property(nonatomic, retain) AVCaptureStillImageOutput *stillImageOutput;
+@property(nonatomic, retain) IBOutlet UIImageView *vImage;
 
 @end
 
