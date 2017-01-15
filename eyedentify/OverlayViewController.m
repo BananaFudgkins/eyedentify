@@ -23,6 +23,7 @@
                                              selector:@selector(animateEverything:)
                                                  name:@"animateUp"
                                                object:nil];
+    NSLog(@"Added an observer");
 }
 
 - (void)didReceiveMemoryWarning {
@@ -31,7 +32,8 @@
 }
 
 - (void)animateEverything:(NSNotification *)note {
-    UIButton *origin = note.object;
+    NSLog(@"The notification was recieved");
+    
 }
 
 /*

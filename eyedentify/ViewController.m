@@ -33,7 +33,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     NSError *error;
     AVCaptureDeviceInput *cameraInput = [[AVCaptureDeviceInput alloc]initWithDevice:device error:&error];
     AVCaptureVideoPreviewLayer *previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:captureSession];
-    
+    self.isReverted = NO;
     
     stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
     NSDictionary *outputSettings = [[NSDictionary alloc] initWithObjectsAndKeys: AVVideoCodecJPEG, AVVideoCodecKey, nil];
@@ -53,7 +53,9 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     
     OverlayViewController *overlayViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"OverlayViewController"];
     [self.view addSubview:overlayViewController.view];
-
+    
+    [self.view addSubview:self.fullScreenButton];
+    
     group = dispatch_group_create();
     [self grabFrameFromVideo];
     dispatch_group_notify(group, dispatch_get_main_queue(), ^{
@@ -127,8 +129,8 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
      }];
 }
 
-- (IBAction)fullScreenPressed:(id)sender {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"animateUp" object:sender];
+- (IBAction)fullScreenPressed:(UIButton *)sender {
+    
 }
 
 @end
