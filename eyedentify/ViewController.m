@@ -129,66 +129,31 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     if ([recognizedText containsString:@"in French"]) {
         recognitionLanguage = @"French";
-        
-        group = dispatch_group_create();
-        [self grabFrameFromVideo];
-        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-            //Grab still frame from video and run neural net once that completes
-            [self runNeuralNet];
-        });
     }
     else if ([recognizedText containsString:@"in Spanish"]) {
         recognitionLanguage = @"Spanish";
-        
-        group = dispatch_group_create();
-        [self grabFrameFromVideo];
-        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-            //Grab still frame from video and run neural net once that completes
-            [self runNeuralNet];
-        });
     }
     else if ([recognizedText containsString:@"in Russian"]) {
         recognitionLanguage = @"Russian";
-        
-        group = dispatch_group_create();
-        [self grabFrameFromVideo];
-        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-            //Grab still frame from video and run neural net once that completes
-            [self runNeuralNet];
-        });
     }
     else if ([recognizedText containsString:@"in English"]) {
         recognitionLanguage = @"English";
-        
-        group = dispatch_group_create();
-        [self grabFrameFromVideo];
-        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-            //Grab still frame from video and run neural net once that completes
-            [self runNeuralNet];
-        });
     }
     else if ([recognizedText containsString:@"am I looking at now"] || [recognizedText containsString:@"hat is this now"]) {
-        
-        group = dispatch_group_create();
-        [self grabFrameFromVideo];
-        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-            //Grab still frame from video and run neural net once that completes
-            [self runNeuralNet];
-        });
     }
     else if ([recognizedText containsString:@"am I looking at"] || [recognizedText containsString:@"hat is this"]) {
-        
-        group = dispatch_group_create();
-        [self grabFrameFromVideo];
-        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-            //Grab still frame from video and run neural net once that completes
-            [self runNeuralNet];
-        });
     }
     else {
         //restart speech recognition
         [self performSelector:@selector(beginSpeechRecognition) withObject:nil afterDelay:0.01];
     }
+    
+    group = dispatch_group_create();
+    [self grabFrameFromVideo];
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        //Grab still frame from video and run neural net once that completes
+        [self runNeuralNet];
+    });
 }
 
 - (void)recognizer:(SKRecognizer *)recognizer didFinishWithError:(NSError *)error suggestion:(NSString *)suggestion {
