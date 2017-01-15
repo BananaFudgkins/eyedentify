@@ -25,13 +25,11 @@
     id <MTLTexture> sourceTexture;
     
     NSString *neuralNetworkResult;
-<<<<<<< HEAD
     BOOL isRecognizing;
-=======
+
     AVCaptureDevice *captureDevice;
     UIView *cameraView;
     UIPinchGestureRecognizer *pinchRecognizer;
->>>>>>> f6e2e79cf38fe9d06c6a406f31f2392206995540
 }
 
 @end
