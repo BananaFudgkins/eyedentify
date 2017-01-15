@@ -45,11 +45,16 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    
+    //Initialize speech recognition framework
+    
     [SpeechKit setupWithID:@"NMDPPRODUCTION_Michael_Royzen_Readr_20150405205027"
                       host:@"dhw.nmdp.nuancemobility.net"
                       port:443
                     useSSL:YES
                   delegate:nil];
+    
+    //Initialize Metal and neural net
     
     device = MTLCreateSystemDefaultDevice();
     
@@ -60,6 +65,8 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     Net = [[Inception3Net alloc]initWithCommandQueue:commandQueue];
     
     ciContext = [CIContext contextWithMTLDevice:device];
+    
+    //Initialize live camera preview
     
     AVCaptureSession *captureSession = [AVCaptureSession new];
     captureDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
@@ -76,6 +83,8 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     [captureSession addOutput:stillImageOutput];
     [captureSession startRunning];
     
+    //Add live camera preview as a subview
+    
     cameraView = [[UIView alloc]initWithFrame:self.view.frame];
     previewLayer.frame = cameraView.bounds;
     [cameraView.layer addSublayer:previewLayer];
@@ -84,12 +93,16 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     
     self.vImage = [[UIImageView alloc]init];
     
+    //Initialize and add the graphical overlay as a subview
+    
     overlayViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"OverlayViewController"];
     [self.view addSubview:overlayViewController.view];
     
     [self.view addSubview:self.fullScreenButton];
     
     recognitionLanguage = @"English";
+    
+    //Init speech synthesizer and gesture recognizers
     
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     synthesizer = [[AVSpeechSynthesizer alloc]init];
@@ -139,6 +152,8 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    //Prevent unwanted touches from being proccessed
+    
     if ([touch view] == self.fullScreenButton || isRecording == NO){
         // If it is, prevent all of the delegate's gesture recognizers
         // from receiving the touch
@@ -158,6 +173,8 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
 - (void)recognizer:(SKRecognizer *)recognizer didFinishWithResults:(SKRecognition *)results {
     NSLog(@"Got results");
     NSLog(@"Session ID: [%@].", [SpeechKit sessionID]);
+    
+    //Process speech recognition results
     
     isRecognizing = YES;
     
@@ -340,7 +357,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
             }];
         }
         else if ([recognitionLanguage isEqualToString:@"German"]) {
-            //Speak in Russian
+            //Speak in German
             FGTranslator *translator =
             [[FGTranslator alloc]initWithGoogleAPIKey:@"AIzaSyDOpsPt1JdWFaC_SrxToRd3oLPvJwixjIo"];
             
@@ -362,7 +379,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
             }];
         }
         else if ([recognitionLanguage isEqualToString:@"Mandarin"]) {
-            //Speak in Russian
+            //Speak in Mandarin
             FGTranslator *translator =
             [[FGTranslator alloc]initWithGoogleAPIKey:@"AIzaSyDOpsPt1JdWFaC_SrxToRd3oLPvJwixjIo"];
             
@@ -384,7 +401,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
             }];
         }
         else if ([recognitionLanguage isEqualToString:@"Italian"]) {
-            //Speak in Russian
+            //Speak in Italian
             FGTranslator *translator =
             [[FGTranslator alloc]initWithGoogleAPIKey:@"AIzaSyDOpsPt1JdWFaC_SrxToRd3oLPvJwixjIo"];
             
@@ -417,7 +434,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     }
     else {
         NSLog(@"Restart called");
-        //re-start the recognition
+        //Re-start speech recognition
         AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
         [self beginSpeechRecognition];
     }
@@ -510,7 +527,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
         [synthesizer speakUtterance:utterance];
     }
     else if ([recognitionLanguage isEqualToString:@"German"]) {
-        //Speak in Russian
+        //Speak in German
         synthesizer = [[AVSpeechSynthesizer alloc]init];
         [synthesizer setDelegate:self];
         AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a "];
@@ -519,7 +536,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
         [synthesizer speakUtterance:utterance];
     }
     else if ([recognitionLanguage isEqualToString:@"Mandarin"]) {
-        //Speak in Russian
+        //Speak in Mandarin
         synthesizer = [[AVSpeechSynthesizer alloc]init];
         [synthesizer setDelegate:self];
         AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a "];
@@ -528,7 +545,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
         [synthesizer speakUtterance:utterance];
     }
     else if ([recognitionLanguage isEqualToString:@"Italian"]) {
-        //Speak in Russian
+        //Speak in Italian
         synthesizer = [[AVSpeechSynthesizer alloc]init];
         [synthesizer setDelegate:self];
         AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a "];
@@ -539,6 +556,8 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
 }
 
 - (void)grabFrameFromVideo {
+    //Grab still frame from video stream and store it as a UIImage
+    
     AVCaptureConnection *videoConnection = nil;
     for (AVCaptureConnection *connection in stillImageOutput.connections)
     {
@@ -591,6 +610,8 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
 }
 
 - (void)handlePinchToZoomRecognizer:(UIPinchGestureRecognizer *)pinchRecognizer {
+    //Zoom camera view
+    
     NSLog(@"The view should start zooming");
     const CGFloat pinchVelocityDividerFactor = 5.0f;
     
@@ -607,6 +628,8 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
 }
 
 - (IBAction)fullScreenPressed:(UIButton *)sender {
+    //Toggle full screen mode (graphical overlay is animated out of the view)
+    
     if (self.shouldRevert == NO) {
         [sender setTitle:@"Revert" forState:UIControlStateNormal];
         dispatch_async(dispatch_get_main_queue(), ^{

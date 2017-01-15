@@ -14,6 +14,7 @@
 		AC1464441E2B7FBD00789231 /* KVNProgressConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = AC14643D1E2B7FBD00789231 /* KVNProgressConfiguration.m */; };
 		AC1464451E2B7FBD00789231 /* KVNRotationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC14643F1E2B7FBD00789231 /* KVNRotationViewController.m */; };
 		AC1464481E2B7FC400789231 /* KVNProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AC1464471E2B7FC400789231 /* KVNProgressView.xib */; };
+		AC229C291E2BC5EF00228BE1 /* Inception3Net.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC229C281E2BC5EF00228BE1 /* Inception3Net.swift */; };
 		AC22EC1A1E2AF0D0003433D1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AC22EC191E2AF0D0003433D1 /* main.m */; };
 		AC22EC1D1E2AF0D0003433D1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AC22EC1C1E2AF0D0003433D1 /* AppDelegate.m */; };
 		AC22EC201E2AF0D0003433D1 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC22EC1F1E2AF0D0003433D1 /* ViewController.m */; };
@@ -33,7 +34,6 @@
 		ACC1F3511E2B2E6800515DBF /* MetalPerformanceShaders.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACC1F3501E2B2E6800515DBF /* MetalPerformanceShaders.framework */; };
 		ACC1F3531E2B2E6B00515DBF /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACC1F3521E2B2E6B00515DBF /* MetalKit.framework */; };
 		ACC1F3551E2B2E6E00515DBF /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACC1F3541E2B2E6E00515DBF /* Metal.framework */; };
-		ACC1F3581E2B2EF000515DBF /* Inception3Net.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC1F3561E2B2EF000515DBF /* Inception3Net.swift */; };
 		ACC1F3591E2B2EF000515DBF /* SlimMPSCNN.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC1F3571E2B2EF000515DBF /* SlimMPSCNN.swift */; };
 		ACC1F41A1E2B361300515DBF /* bias_conv.dat in Resources */ = {isa = PBXBuildFile; fileRef = ACC1F35C1E2B361200515DBF /* bias_conv.dat */; };
 		ACC1F41B1E2B361300515DBF /* bias_conv_1.dat in Resources */ = {isa = PBXBuildFile; fileRef = ACC1F35D1E2B361200515DBF /* bias_conv_1.dat */; };
@@ -287,6 +287,7 @@
 		AC14643E1E2B7FBD00789231 /* KVNRotationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KVNRotationViewController.h; sourceTree = "<group>"; };
 		AC14643F1E2B7FBD00789231 /* KVNRotationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVNRotationViewController.m; sourceTree = "<group>"; };
 		AC1464471E2B7FC400789231 /* KVNProgressView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KVNProgressView.xib; sourceTree = "<group>"; };
+		AC229C281E2BC5EF00228BE1 /* Inception3Net.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Inception3Net.swift; sourceTree = "<group>"; };
 		AC22EC151E2AF0D0003433D1 /* eyedentify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = eyedentify.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC22EC191E2AF0D0003433D1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		AC22EC1B1E2AF0D0003433D1 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -315,7 +316,6 @@
 		ACC1F3501E2B2E6800515DBF /* MetalPerformanceShaders.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalPerformanceShaders.framework; path = System/Library/Frameworks/MetalPerformanceShaders.framework; sourceTree = SDKROOT; };
 		ACC1F3521E2B2E6B00515DBF /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		ACC1F3541E2B2E6E00515DBF /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
-		ACC1F3561E2B2EF000515DBF /* Inception3Net.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Inception3Net.swift; sourceTree = "<group>"; };
 		ACC1F3571E2B2EF000515DBF /* SlimMPSCNN.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlimMPSCNN.swift; sourceTree = "<group>"; };
 		ACC1F35C1E2B361200515DBF /* bias_conv.dat */ = {isa = PBXFileReference; lastKnownFileType = file; path = bias_conv.dat; sourceTree = "<group>"; };
 		ACC1F35D1E2B361200515DBF /* bias_conv_1.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bias_conv_1.dat; sourceTree = "<group>"; };
@@ -675,7 +675,7 @@
 				AC22EC1F1E2AF0D0003433D1 /* ViewController.m */,
 				AC7E5E721E2AF15800EAFCA5 /* OverlayViewController.h */,
 				AC7E5E731E2AF15800EAFCA5 /* OverlayViewController.m */,
-				ACC1F3561E2B2EF000515DBF /* Inception3Net.swift */,
+				AC229C281E2BC5EF00228BE1 /* Inception3Net.swift */,
 				ACC1F3571E2B2EF000515DBF /* SlimMPSCNN.swift */,
 				AC22EC211E2AF0D0003433D1 /* Main.storyboard */,
 				AC22EC241E2AF0D0003433D1 /* Assets.xcassets */,
@@ -1393,13 +1393,13 @@
 				ACC1F5351E2B534700515DBF /* README.md in Sources */,
 				AC1464441E2B7FBD00789231 /* KVNProgressConfiguration.m in Sources */,
 				ACC1F51C1E2B534700515DBF /* AFNetworkReachabilityManager.m in Sources */,
-				ACC1F3581E2B2EF000515DBF /* Inception3Net.swift in Sources */,
 				ACC1F5271E2B534700515DBF /* UIButton+AFNetworking.m in Sources */,
 				ACC1F51E1E2B534700515DBF /* AFURLConnectionOperation.m in Sources */,
 				AC1464431E2B7FBD00789231 /* KVNProgress.m in Sources */,
 				ACC1F52C1E2B534700515DBF /* FGAzureToken.m in Sources */,
 				ACC1F5251E2B534700515DBF /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				ACC1F5231E2B534700515DBF /* README.md in Sources */,
+				AC229C291E2BC5EF00228BE1 /* Inception3Net.swift in Sources */,
 				ACC1F5241E2B534700515DBF /* AFNetworkActivityIndicatorManager.m in Sources */,
 				ACC1F52E1E2B534700515DBF /* FGTranslator.m in Sources */,
 				ACC1F52F1E2B534700515DBF /* NSString+FGTranslator.m in Sources */,
@@ -1576,6 +1576,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "Mlab-Technologies.eyedentify";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -1595,6 +1596,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "Mlab-Technologies.eyedentify";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
