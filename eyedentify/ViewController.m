@@ -25,6 +25,7 @@
     id <MTLTexture> sourceTexture;
     
     NSString *neuralNetworkResult;
+    BOOL isRecognizing;
 }
 
 @end
@@ -113,6 +114,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     NSLog(@"Got results");
     NSLog(@"Session ID: [%@].", [SpeechKit sessionID]);
     
+    isRecognizing = YES;
     
     recognizedText = [results firstResult];
     NSLog(@"Recognized text: %@", recognizedText);
@@ -186,9 +188,35 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
 
 }
 
-- (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didFinishSpeechUtterance:(AVSpeechUtterance *)utterance {
-    //re-start the recognition
-    [self beginSpeechRecognition];
+- (void)speechSynthesizer:(AVSpeechSynthesizer *)returnSynthesizer didFinishSpeechUtterance:(AVSpeechUtterance *)utterance {
+    if (isRecognizing == YES) {
+        
+        if ([recognitionLanguage isEqualToString:@"French"]) {
+            //Translate to French
+            //Speak in French
+        }
+        else if ([recognitionLanguage isEqualToString:@"Spanish"]) {
+            //Speak in Spanish
+        }
+        else if ([recognitionLanguage isEqualToString:@"Russian"]) {
+            //Speak in Russian
+            synthesizer = [[AVSpeechSynthesizer alloc]init];
+            [synthesizer setDelegate:self];
+            AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a thing."];
+            [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"ru-RU"]];
+            [utterance setRate:.5];
+            [synthesizer speakUtterance:utterance];
+        }
+        else if ([recognitionLanguage isEqualToString:@"English"]) {
+            [self beginSpeechRecognition];
+        }
+        isRecognizing = NO;
+    }
+    else {
+        NSLog(@"Restart called");
+        //re-start the recognition
+        [self beginSpeechRecognition];
+    }
 }
 
 - (void)runNeuralNet {
@@ -210,30 +238,58 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
         //extract top result from neural net results
         //neuralNetworkResult = [[labelString componentsSeparatedByString:@"/n"] objectAtIndex:0];
         __block NSString *secondLine = nil;
-        int counter = 0;
+        __block int counter = 0;
         [labelString enumerateLinesUsingBlock:^(NSString *line, BOOL *stop) {
-            //firstLine = [[line retain] autorelease];
-            *stop = YES;
+            secondLine = line;
+            if (counter == 1) {
+                *stop = YES;
+            }
+            counter++;
         }];
-        NSLog(@"Result: %@", labelString);
+        secondLine = [[secondLine componentsSeparatedByString:@", "] objectAtIndex:0];
+        neuralNetworkResult = secondLine;
+        NSLog(@"Result: %@", secondLine);
+        [self speakResults];
     }
-    
+}
+
+- (void)speakResults {
     //speak results
+    
     if ([recognitionLanguage isEqualToString:@"English"]) {
         //Speak in English
+        synthesizer = [[AVSpeechSynthesizer alloc]init];
+        [synthesizer setDelegate:self];
+        NSString *stringToSpeak = [@"You are looking at a " stringByAppendingString:neuralNetworkResult];
+        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:stringToSpeak];
+        [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"]];
+        [utterance setRate:.5];
+        [synthesizer speakUtterance:utterance];
     }
     else if ([recognitionLanguage isEqualToString:@"French"]) {
         //Speak in French
+        synthesizer = [[AVSpeechSynthesizer alloc]init];
+        [synthesizer setDelegate:self];
+        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a "];
+        [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"]];
+        [utterance setRate:.5];
+        [synthesizer speakUtterance:utterance];
     }
     else if ([recognitionLanguage isEqualToString:@"Spanish"]) {
         //Speak in Spanish
+        synthesizer = [[AVSpeechSynthesizer alloc]init];
+        [synthesizer setDelegate:self];
+        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a "];
+        [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"]];
+        [utterance setRate:.5];
+        [synthesizer speakUtterance:utterance];
     }
     else if ([recognitionLanguage isEqualToString:@"Russian"]) {
         //Speak in Russian
         synthesizer = [[AVSpeechSynthesizer alloc]init];
         [synthesizer setDelegate:self];
-        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a thing."];
-        [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"ru-RU"]];
+        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a "];
+        [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"]];
         [utterance setRate:.5];
         [synthesizer speakUtterance:utterance];
     }
