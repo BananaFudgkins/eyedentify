@@ -95,6 +95,8 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     [utterance setRate:.5];
     [synthesizer speakUtterance:utterance];
     
+    [self.view addSubview:self.recognizedObjectLabel];
+    
     pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchToZoomRecognizer:)];
     [self.view addGestureRecognizer:pinchRecognizer];
     
@@ -167,7 +169,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
             [self runNeuralNet];
         });
     }
-    else if ([recognizedText containsString:@"am I looking at now"] || [recognizedText containsString:@"hat is this now"]) {
+    else if ([recognizedText containsString:@"am I looking at now"] || [recognizedText containsString:@"hat is this now"] || [recognizedText containsString:@"hat about now"] || [recognizedText containsString:@"and now"]) {
         
         group = dispatch_group_create();
         [self grabFrameFromVideo];
@@ -211,6 +213,14 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
                 [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"fr-FR"]];
                 [utterance setRate:.5];
                 [synthesizer speakUtterance:utterance];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.recognizedObjectLabel.text = translated;
+                    self.recognizedObjectLabel.hidden = NO;
+                });
+                
+                NSTimer *timer;
+                timer = [NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(hideLabel) userInfo:nil repeats:NO];
             }];
         }
         else if ([recognitionLanguage isEqualToString:@"Spanish"]) {
@@ -225,6 +235,14 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
                 [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"es-ES"]];
                 [utterance setRate:.5];
                 [synthesizer speakUtterance:utterance];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.recognizedObjectLabel.text = translated;
+                    self.recognizedObjectLabel.hidden = NO;
+                });
+                
+                NSTimer *timer;
+                timer = [NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(hideLabel) userInfo:nil repeats:NO];
             }];
         }
         else if ([recognitionLanguage isEqualToString:@"Russian"]) {
@@ -239,6 +257,14 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
                 [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"ru-RU"]];
                 [utterance setRate:.5];
                 [synthesizer speakUtterance:utterance];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.recognizedObjectLabel.text = translated;
+                    self.recognizedObjectLabel.hidden = NO;
+                });
+                
+                NSTimer *timer;
+                timer = [NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(hideLabel) userInfo:nil repeats:NO];
             }];
         }
         else if ([recognitionLanguage isEqualToString:@"English"]) {
@@ -251,6 +277,10 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
         //re-start the recognition
         [self beginSpeechRecognition];
     }
+}
+
+- (void)hideLabel {
+    self.recognizedObjectLabel.hidden = YES;
 }
 
 - (void)runNeuralNet {
@@ -292,6 +322,14 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     
     if ([recognitionLanguage isEqualToString:@"English"]) {
         //Speak in English
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.recognizedObjectLabel.text = neuralNetworkResult;
+            self.recognizedObjectLabel.hidden = NO;
+        });
+        
+        NSTimer *timer;
+        timer = [NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(hideLabel) userInfo:nil repeats:NO];
+        
         synthesizer = [[AVSpeechSynthesizer alloc]init];
         [synthesizer setDelegate:self];
         NSString *stringToSpeak = [@"You are looking at a " stringByAppendingString:neuralNetworkResult];
