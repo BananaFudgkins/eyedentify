@@ -122,6 +122,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     NSLog(@"Session ID: [%@].", [SpeechKit sessionID]);
     
     isRecognizing = YES;
+    [KVNProgress showWithStatus:@"Recognizing..."];
     
     recognizedText = [results firstResult];
     NSLog(@"Recognized text: %@", recognizedText);
