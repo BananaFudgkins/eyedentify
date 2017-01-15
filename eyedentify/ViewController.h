@@ -22,7 +22,7 @@
 #import "AFNetworking.h"
 #import "KVNProgress.h"
 
-@interface ViewController : UIViewController <AVSpeechSynthesizerDelegate, SpeechKitDelegate, SKRecognizerDelegate> {
+@interface ViewController : UIViewController <AVSpeechSynthesizerDelegate, SpeechKitDelegate, SKRecognizerDelegate, UIGestureRecognizerDelegate> {
     SKRecognizer *voiceSearch;
     enum {
         TS_IDLE,

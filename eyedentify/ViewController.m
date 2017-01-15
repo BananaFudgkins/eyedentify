@@ -26,10 +26,12 @@
     
     NSString *neuralNetworkResult;
     BOOL isRecognizing;
+    BOOL touchesActive;
 
     AVCaptureDevice *captureDevice;
     UIView *cameraView;
     UIPinchGestureRecognizer *pinchRecognizer;
+    UITapGestureRecognizer *tapGestureRecognizer;
 }
 
 @end
@@ -91,7 +93,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     synthesizer = [[AVSpeechSynthesizer alloc]init];
     [synthesizer setDelegate:self];
-    AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"Welcome to eyedentify."];
+    AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"Welcome to eyedentify.  Please say a command or touch the screen after the vibration."];
     [utterance setRate:.5];
     [synthesizer speakUtterance:utterance];
     
@@ -99,6 +101,10 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     
     pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchToZoomRecognizer:)];
     [self.view addGestureRecognizer:pinchRecognizer];
+    
+    tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleTap)];
+    [self.view addGestureRecognizer:tapGestureRecognizer];
+    touchesActive = NO;
     
     // Do any additional setup after loading the view, typically from a nib.
 }
@@ -112,6 +118,28 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     NSLog(@"Recording started");
     transactionState = TS_RECORDING;
     //[KVNProgress showSuccessWithStatus:@"Began Listening"];
+}
+
+- (void)handleTap {
+    [voiceSearch stopRecording];
+    isRecognizing = YES;
+    touchesActive = YES;
+     
+    group = dispatch_group_create();
+    [self grabFrameFromVideo];
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        //Grab still frame from video and run neural net once that completes
+        [self runNeuralNet];
+    });
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    if ([touch view] == self.fullScreenButton){
+        // If it is, prevent all of the delegate's gesture recognizers
+        // from receiving the touch
+        return NO;
+    }
+    return YES;
 }
 
 - (void)recognizerDidFinishRecording:(SKRecognizer *)recognizer {
@@ -171,6 +199,36 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
             [self runNeuralNet];
         });
     }
+    else if ([recognizedText containsString:@"in German"]) {
+        recognitionLanguage = @"German";
+        
+        group = dispatch_group_create();
+        [self grabFrameFromVideo];
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            //Grab still frame from video and run neural net once that completes
+            [self runNeuralNet];
+        });
+    }
+    else if ([recognizedText containsString:@"in Mandarin"]) {
+        recognitionLanguage = @"Mandarin";
+        
+        group = dispatch_group_create();
+        [self grabFrameFromVideo];
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            //Grab still frame from video and run neural net once that completes
+            [self runNeuralNet];
+        });
+    }
+    else if ([recognizedText containsString:@"in Italian"]) {
+        recognitionLanguage = @"Italian";
+        
+        group = dispatch_group_create();
+        [self grabFrameFromVideo];
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            //Grab still frame from video and run neural net once that completes
+            [self runNeuralNet];
+        });
+    }
     else if ([recognizedText containsString:@"am I looking at now"] || [recognizedText containsString:@"hat is this now"] || [recognizedText containsString:@"hat about now"] || [recognizedText containsString:@"And now"]) {
         
         group = dispatch_group_create();
@@ -191,7 +249,9 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     }
     else {
         //restart speech recognition
-        [self performSelector:@selector(beginSpeechRecognition) withObject:nil afterDelay:0.01];
+        if (touchesActive == NO) {
+            [self performSelector:@selector(beginSpeechRecognition) withObject:nil afterDelay:0.01];
+        }
     }
 }
 
@@ -273,14 +333,86 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
                 timer = [NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(hideLabel) userInfo:nil repeats:NO];
             }];
         }
+        else if ([recognitionLanguage isEqualToString:@"German"]) {
+            //Speak in Russian
+            FGTranslator *translator =
+            [[FGTranslator alloc]initWithGoogleAPIKey:@"AIzaSyDOpsPt1JdWFaC_SrxToRd3oLPvJwixjIo"];
+            
+            [translator translateText:neuralNetworkResult withSource:@"en" target:@"de" completion:^(NSError *error, NSString *translated, NSString *sourceLanguage) {
+                synthesizer = [[AVSpeechSynthesizer alloc]init];
+                [synthesizer setDelegate:self];
+                AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:translated];
+                [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"de-DE"]];
+                [utterance setRate:.5];
+                [synthesizer speakUtterance:utterance];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.recognizedObjectLabel.text = translated;
+                    self.recognizedObjectLabel.hidden = NO;
+                });
+                
+                NSTimer *timer;
+                timer = [NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(hideLabel) userInfo:nil repeats:NO];
+            }];
+        }
+        else if ([recognitionLanguage isEqualToString:@"Mandarin"]) {
+            //Speak in Russian
+            FGTranslator *translator =
+            [[FGTranslator alloc]initWithGoogleAPIKey:@"AIzaSyDOpsPt1JdWFaC_SrxToRd3oLPvJwixjIo"];
+            
+            [translator translateText:neuralNetworkResult withSource:@"en" target:@"zh-TW" completion:^(NSError *error, NSString *translated, NSString *sourceLanguage) {
+                synthesizer = [[AVSpeechSynthesizer alloc]init];
+                [synthesizer setDelegate:self];
+                AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:translated];
+                [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"zh-TW"]];
+                [utterance setRate:.5];
+                [synthesizer speakUtterance:utterance];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.recognizedObjectLabel.text = translated;
+                    self.recognizedObjectLabel.hidden = NO;
+                });
+                
+                NSTimer *timer;
+                timer = [NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(hideLabel) userInfo:nil repeats:NO];
+            }];
+        }
+        else if ([recognitionLanguage isEqualToString:@"Italian"]) {
+            //Speak in Russian
+            FGTranslator *translator =
+            [[FGTranslator alloc]initWithGoogleAPIKey:@"AIzaSyDOpsPt1JdWFaC_SrxToRd3oLPvJwixjIo"];
+            
+            [translator translateText:neuralNetworkResult withSource:@"en" target:@"it" completion:^(NSError *error, NSString *translated, NSString *sourceLanguage) {
+                synthesizer = [[AVSpeechSynthesizer alloc]init];
+                [synthesizer setDelegate:self];
+                AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:translated];
+                [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"it-IT"]];
+                [utterance setRate:.5];
+                [synthesizer speakUtterance:utterance];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.recognizedObjectLabel.text = translated;
+                    self.recognizedObjectLabel.hidden = NO;
+                });
+                
+                NSTimer *timer;
+                timer = [NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(hideLabel) userInfo:nil repeats:NO];
+            }];
+        }
         else if ([recognitionLanguage isEqualToString:@"English"]) {
+            AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
+            if (touchesActive == NO) {
+                NSLog(@"Begun for english");
+            }
             [self beginSpeechRecognition];
         }
         isRecognizing = NO;
+        touchesActive = NO;
     }
     else {
         NSLog(@"Restart called");
         //re-start the recognition
+        AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
         [self beginSpeechRecognition];
     }
 }
@@ -363,6 +495,33 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
         [synthesizer speakUtterance:utterance];
     }
     else if ([recognitionLanguage isEqualToString:@"Russian"]) {
+        //Speak in Russian
+        synthesizer = [[AVSpeechSynthesizer alloc]init];
+        [synthesizer setDelegate:self];
+        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a "];
+        [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"]];
+        [utterance setRate:.5];
+        [synthesizer speakUtterance:utterance];
+    }
+    else if ([recognitionLanguage isEqualToString:@"German"]) {
+        //Speak in Russian
+        synthesizer = [[AVSpeechSynthesizer alloc]init];
+        [synthesizer setDelegate:self];
+        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a "];
+        [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"]];
+        [utterance setRate:.5];
+        [synthesizer speakUtterance:utterance];
+    }
+    else if ([recognitionLanguage isEqualToString:@"Mandarin"]) {
+        //Speak in Russian
+        synthesizer = [[AVSpeechSynthesizer alloc]init];
+        [synthesizer setDelegate:self];
+        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a "];
+        [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"]];
+        [utterance setRate:.5];
+        [synthesizer speakUtterance:utterance];
+    }
+    else if ([recognitionLanguage isEqualToString:@"Italian"]) {
         //Speak in Russian
         synthesizer = [[AVSpeechSynthesizer alloc]init];
         [synthesizer setDelegate:self];
