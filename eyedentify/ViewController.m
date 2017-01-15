@@ -127,4 +127,8 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
      }];
 }
 
+- (IBAction)fullScreenPressed:(id)sender {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"animateUp" object:sender];
+}
+
 @end

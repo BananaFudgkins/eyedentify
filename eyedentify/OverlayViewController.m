@@ -20,7 +20,7 @@
     self.iconBackground.layer.cornerRadius = self.iconBackground.frame.size.width / 2;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(animateEverything)
+                                             selector:@selector(animateEverything:)
                                                  name:@"animateUp"
                                                object:nil];
 }
@@ -30,8 +30,8 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)animateEverything {
-    
+- (void)animateEverything:(NSNotification *)note {
+    UIButton *origin = note.object;
 }
 
 /*
