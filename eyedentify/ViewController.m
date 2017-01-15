@@ -11,11 +11,8 @@
 @interface ViewController () {
     dispatch_group_t group;
     AVSpeechSynthesizer *synthesizer;
-<<<<<<< HEAD
     NSString *recognizedText;
-=======
     OverlayViewController *overlayViewController;
->>>>>>> 41958e8188b1e14aadabd5aff1492e6b3eba69d4
 }
 
 @end
