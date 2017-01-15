@@ -18,12 +18,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.iconBackground.layer.cornerRadius = self.iconBackground.frame.size.width / 2;
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(animateEverything:)
-                                                 name:@"animateUp"
-                                               object:nil];
-    NSLog(@"Added an observer");
 }
 
 - (void)didReceiveMemoryWarning {
@@ -31,9 +25,14 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)animateEverything:(NSNotification *)note {
-    NSLog(@"The notification was recieved");
-    
++ (void)animateEverything {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            
+        } completion:^(BOOL finished) {
+            NSLog(@"The animation finished.");
+        }];
+    });
 }
 
 /*
