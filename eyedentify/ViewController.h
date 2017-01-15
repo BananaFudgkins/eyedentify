@@ -28,7 +28,7 @@
 @property(nonatomic, retain) AVCaptureStillImageOutput *stillImageOutput;
 @property(nonatomic, retain) IBOutlet UIImageView *vImage;
 @property (strong, nonatomic) IBOutlet UIButton *fullScreenButton;
-@property (nonatomic) BOOL isReverted;
+@property (nonatomic) BOOL shouldRevert;
 
 @end
 

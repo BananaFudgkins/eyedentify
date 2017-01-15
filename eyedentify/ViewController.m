@@ -33,7 +33,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     NSError *error;
     AVCaptureDeviceInput *cameraInput = [[AVCaptureDeviceInput alloc]initWithDevice:device error:&error];
     AVCaptureVideoPreviewLayer *previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:captureSession];
-    self.isReverted = NO;
+    self.shouldRevert = NO;
     
     stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
     NSDictionary *outputSettings = [[NSDictionary alloc] initWithObjectsAndKeys: AVVideoCodecJPEG, AVVideoCodecKey, nil];
@@ -130,7 +130,12 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
 }
 
 - (IBAction)fullScreenPressed:(UIButton *)sender {
-    
+    if (self.shouldRevert == NO) {
+        [sender setTitle:@"Revert" forState:UIControlStateNormal];
+        self.shouldRevert = YES;
+    } else if (self.shouldRevert == YES) {
+        [sender setTitle:@"Full Screen" forState:UIControlStateNormal];
+    }
 }
 
 @end
