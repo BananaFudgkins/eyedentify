@@ -10,6 +10,7 @@
 
 @interface ViewController () {
     dispatch_group_t group;
+    AVSpeechSynthesizer *synthesizer;
 }
 
 @end
@@ -62,6 +63,13 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
         
     });
     
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    synthesizer = [[AVSpeechSynthesizer alloc]init];
+    [synthesizer setDelegate:self];
+    AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"Welcome to eyedentify."];
+    [utterance setRate:.5];
+    [synthesizer speakUtterance:utterance];
+    
     // Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -85,12 +93,30 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     NSLog(@"Got results");
     NSLog(@"Session ID: [%@].", [SpeechKit sessionID]);
     
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    NSString *recognizedText = [results firstResult];
     
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    if ([recognizedText containsString:@"in French"]) {
+        
+    }
+    else if ([recognizedText containsString:@"in Spanish"]) {
+        
+    }
+    else if ([recognizedText containsString:@"in Russian"]) {
+        
+    }
+    else if ([recognizedText containsString:@"in Russian"]) {
+        
+    }
 }
 
 - (void)recognizer:(SKRecognizer *)recognizer didFinishWithError:(NSError *)error suggestion:(NSString *)suggestion {
 
+}
+
+- (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didFinishSpeechUtterance:(AVSpeechUtterance *)utterance {
+    //re-start the recognition
+    [self beginSpeechRecognition];
 }
 
 - (void)grabFrameFromVideo {
@@ -127,6 +153,22 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
          self.vImage.image = image;
          dispatch_group_leave(group);
      }];
+}
+
+- (void)beginSpeechRecognition {
+    voiceSearch = nil;
+    SKEndOfSpeechDetection detectionType;
+    NSString* recoType;
+    
+    //transactionState = TS_INITIAL;
+    
+    detectionType = SKLongEndOfSpeechDetection;
+    recoType = SKDictationRecognizerType;
+    
+    voiceSearch = [[SKRecognizer alloc] initWithType:recoType
+                                           detection:detectionType
+                                            language:@"en_US"
+                                            delegate:self];
 }
 
 - (IBAction)fullScreenPressed:(UIButton *)sender {
