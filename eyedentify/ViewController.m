@@ -201,18 +201,45 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
         if ([recognitionLanguage isEqualToString:@"French"]) {
             //Translate to French
             //Speak in French
+            FGTranslator *translator =
+            [[FGTranslator alloc]initWithGoogleAPIKey:@"AIzaSyDOpsPt1JdWFaC_SrxToRd3oLPvJwixjIo"];
+            
+            [translator translateText:neuralNetworkResult withSource:@"en" target:@"fr" completion:^(NSError *error, NSString *translated, NSString *sourceLanguage) {
+                synthesizer = [[AVSpeechSynthesizer alloc]init];
+                [synthesizer setDelegate:self];
+                AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:translated];
+                [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"fr-FR"]];
+                [utterance setRate:.5];
+                [synthesizer speakUtterance:utterance];
+            }];
         }
         else if ([recognitionLanguage isEqualToString:@"Spanish"]) {
             //Speak in Spanish
+            FGTranslator *translator =
+            [[FGTranslator alloc]initWithGoogleAPIKey:@"AIzaSyDOpsPt1JdWFaC_SrxToRd3oLPvJwixjIo"];
+            
+            [translator translateText:neuralNetworkResult withSource:@"en" target:@"es" completion:^(NSError *error, NSString *translated, NSString *sourceLanguage) {
+                synthesizer = [[AVSpeechSynthesizer alloc]init];
+                [synthesizer setDelegate:self];
+                AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:translated];
+                [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"es-ES"]];
+                [utterance setRate:.5];
+                [synthesizer speakUtterance:utterance];
+            }];
         }
         else if ([recognitionLanguage isEqualToString:@"Russian"]) {
             //Speak in Russian
-            synthesizer = [[AVSpeechSynthesizer alloc]init];
-            [synthesizer setDelegate:self];
-            AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a thing."];
-            [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"ru-RU"]];
-            [utterance setRate:.5];
-            [synthesizer speakUtterance:utterance];
+            FGTranslator *translator =
+            [[FGTranslator alloc]initWithGoogleAPIKey:@"AIzaSyDOpsPt1JdWFaC_SrxToRd3oLPvJwixjIo"];
+            
+            [translator translateText:neuralNetworkResult withSource:@"en" target:@"ru" completion:^(NSError *error, NSString *translated, NSString *sourceLanguage) {
+                synthesizer = [[AVSpeechSynthesizer alloc]init];
+                [synthesizer setDelegate:self];
+                AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:translated];
+                [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"ru-RU"]];
+                [utterance setRate:.5];
+                [synthesizer speakUtterance:utterance];
+            }];
         }
         else if ([recognitionLanguage isEqualToString:@"English"]) {
             [self beginSpeechRecognition];

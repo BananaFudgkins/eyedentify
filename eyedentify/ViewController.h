@@ -18,6 +18,8 @@
 #import <MetalPerformanceShaders/MetalPerformanceShaders.h>
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
+#import "FGTranslator.h"
+#import "AFNetworking.h"
 
 @interface ViewController : UIViewController <AVSpeechSynthesizerDelegate, SpeechKitDelegate, SKRecognizerDelegate> {
     SKRecognizer *voiceSearch;

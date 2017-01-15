@@ -585,8 +585,8 @@
 		AC22EC0C1E2AF0D0003433D1 = {
 			isa = PBXGroup;
 			children = (
+				ACC1F4D81E2B534700515DBF /* FGTranslator */,
 				ACC1F50E1E2B534700515DBF /* PINCache */,
-				ACC1F35B1E2B361200515DBF /* batch_normalized_binaries */,
 				ACC1F35A1E2B361200515DBF /* network_params */,
 				AC22EC171E2AF0D0003433D1 /* eyedentify */,
 				AC22EC311E2AF0D0003433D1 /* eyedentifyTests */,
@@ -672,7 +672,7 @@
 		ACC1F35A1E2B361200515DBF /* network_params */ = {
 			isa = PBXGroup;
 			children = (
-				ACC1F4D81E2B534700515DBF /* FGTranslator */,
+				ACC1F35B1E2B361200515DBF /* batch_normalized_binaries */,
 			);
 			name = network_params;
 			path = eyedentify/network_params;
@@ -872,8 +872,7 @@
 				ACC1F4181E2B361300515DBF /* weights_mixed_tower_conv_1.dat */,
 				ACC1F4191E2B361300515DBF /* weights_softmax.dat */,
 			);
-			name = batch_normalized_binaries;
-			path = eyedentify/network_params/batch_normalized_binaries;
+			path = batch_normalized_binaries;
 			sourceTree = "<group>";
 		};
 		ACC1F4D81E2B534700515DBF /* FGTranslator */ = {
@@ -890,7 +889,8 @@
 				ACC1F50A1E2B534700515DBF /* NSString+FGTranslator.m */,
 				ACC1F50B1E2B534700515DBF /* XMLDictionary */,
 			);
-			path = FGTranslator;
+			name = FGTranslator;
+			path = eyedentify/network_params/FGTranslator;
 			sourceTree = "<group>";
 		};
 		ACC1F4D91E2B534700515DBF /* AFNetworking */ = {
