@@ -18,6 +18,11 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.iconBackground.layer.cornerRadius = self.iconBackground.frame.size.width / 2;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(animateEverything)
+                                                 name:@"animateUp"
+                                               object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -25,8 +30,8 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)fullScreenPressed:(id)sender {
-    NSLog(@"The full screen button was tapped.");
+- (void)animateEverything {
+    
 }
 
 /*
