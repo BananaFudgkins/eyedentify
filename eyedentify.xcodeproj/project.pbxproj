@@ -7,13 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		68AC9F991E2B62C20003099F /* UIColor+KVNContrast.m in Sources */ = {isa = PBXBuildFile; fileRef = 68AC9F8B1E2B62C20003099F /* UIColor+KVNContrast.m */; };
-		68AC9F9A1E2B62C20003099F /* UIImage+KVNEmpty.m in Sources */ = {isa = PBXBuildFile; fileRef = 68AC9F8D1E2B62C20003099F /* UIImage+KVNEmpty.m */; };
-		68AC9F9B1E2B62C20003099F /* UIImage+KVNImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 68AC9F8F1E2B62C20003099F /* UIImage+KVNImageEffects.m */; };
-		68AC9F9C1E2B62C20003099F /* KVNProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 68AC9F921E2B62C20003099F /* KVNProgress.m */; };
-		68AC9F9D1E2B62C20003099F /* KVNProgressConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 68AC9F941E2B62C20003099F /* KVNProgressConfiguration.m */; };
-		68AC9F9E1E2B62C20003099F /* KVNRotationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68AC9F961E2B62C20003099F /* KVNRotationViewController.m */; };
-		68AC9F9F1E2B62C20003099F /* KVNProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68AC9F981E2B62C20003099F /* KVNProgressView.xib */; };
 		AC22EC1A1E2AF0D0003433D1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AC22EC191E2AF0D0003433D1 /* main.m */; };
 		AC22EC1D1E2AF0D0003433D1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AC22EC1C1E2AF0D0003433D1 /* AppDelegate.m */; };
 		AC22EC201E2AF0D0003433D1 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC22EC1F1E2AF0D0003433D1 /* ViewController.m */; };
@@ -274,19 +267,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		68AC9F8A1E2B62C20003099F /* UIColor+KVNContrast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+KVNContrast.h"; sourceTree = "<group>"; };
-		68AC9F8B1E2B62C20003099F /* UIColor+KVNContrast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+KVNContrast.m"; sourceTree = "<group>"; };
-		68AC9F8C1E2B62C20003099F /* UIImage+KVNEmpty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+KVNEmpty.h"; sourceTree = "<group>"; };
-		68AC9F8D1E2B62C20003099F /* UIImage+KVNEmpty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+KVNEmpty.m"; sourceTree = "<group>"; };
-		68AC9F8E1E2B62C20003099F /* UIImage+KVNImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+KVNImageEffects.h"; sourceTree = "<group>"; };
-		68AC9F8F1E2B62C20003099F /* UIImage+KVNImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+KVNImageEffects.m"; sourceTree = "<group>"; };
-		68AC9F911E2B62C20003099F /* KVNProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KVNProgress.h; sourceTree = "<group>"; };
-		68AC9F921E2B62C20003099F /* KVNProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVNProgress.m; sourceTree = "<group>"; };
-		68AC9F931E2B62C20003099F /* KVNProgressConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KVNProgressConfiguration.h; sourceTree = "<group>"; };
-		68AC9F941E2B62C20003099F /* KVNProgressConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVNProgressConfiguration.m; sourceTree = "<group>"; };
-		68AC9F951E2B62C20003099F /* KVNRotationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KVNRotationViewController.h; sourceTree = "<group>"; };
-		68AC9F961E2B62C20003099F /* KVNRotationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVNRotationViewController.m; sourceTree = "<group>"; };
-		68AC9F981E2B62C20003099F /* KVNProgressView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KVNProgressView.xib; sourceTree = "<group>"; };
 		AC22EC151E2AF0D0003433D1 /* eyedentify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = eyedentify.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC22EC191E2AF0D0003433D1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		AC22EC1B1E2AF0D0003433D1 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -602,54 +582,9 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		68AC9F881E2B629C0003099F /* KVNProgress */ = {
-			isa = PBXGroup;
-			children = (
-				68AC9F891E2B62C20003099F /* Categories */,
-				68AC9F901E2B62C20003099F /* Classes */,
-				68AC9F971E2B62C20003099F /* Resources */,
-			);
-			name = KVNProgress;
-			sourceTree = "<group>";
-		};
-		68AC9F891E2B62C20003099F /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-				68AC9F8A1E2B62C20003099F /* UIColor+KVNContrast.h */,
-				68AC9F8B1E2B62C20003099F /* UIColor+KVNContrast.m */,
-				68AC9F8C1E2B62C20003099F /* UIImage+KVNEmpty.h */,
-				68AC9F8D1E2B62C20003099F /* UIImage+KVNEmpty.m */,
-				68AC9F8E1E2B62C20003099F /* UIImage+KVNImageEffects.h */,
-				68AC9F8F1E2B62C20003099F /* UIImage+KVNImageEffects.m */,
-			);
-			path = Categories;
-			sourceTree = "<group>";
-		};
-		68AC9F901E2B62C20003099F /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				68AC9F911E2B62C20003099F /* KVNProgress.h */,
-				68AC9F921E2B62C20003099F /* KVNProgress.m */,
-				68AC9F931E2B62C20003099F /* KVNProgressConfiguration.h */,
-				68AC9F941E2B62C20003099F /* KVNProgressConfiguration.m */,
-				68AC9F951E2B62C20003099F /* KVNRotationViewController.h */,
-				68AC9F961E2B62C20003099F /* KVNRotationViewController.m */,
-			);
-			path = Classes;
-			sourceTree = "<group>";
-		};
-		68AC9F971E2B62C20003099F /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				68AC9F981E2B62C20003099F /* KVNProgressView.xib */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
 		AC22EC0C1E2AF0D0003433D1 = {
 			isa = PBXGroup;
 			children = (
-				68AC9F881E2B629C0003099F /* KVNProgress */,
 				ACC1F4D81E2B534700515DBF /* FGTranslator */,
 				ACC1F50E1E2B534700515DBF /* PINCache */,
 				ACC1F35A1E2B361200515DBF /* network_params */,
@@ -1183,7 +1118,6 @@
 				ACC1F41A1E2B361300515DBF /* bias_conv.dat in Resources */,
 				ACC1F4971E2B361300515DBF /* weights_mixed_3_tower_conv_1.dat in Resources */,
 				ACC1F5311E2B534700515DBF /* LICENSE.txt in Resources */,
-				68AC9F9F1E2B62C20003099F /* KVNProgressView.xib in Resources */,
 				ACC1F4821E2B361300515DBF /* weights_mixed_10_tower_1_mixed_conv_1.dat in Resources */,
 				ACC1F41D1E2B361300515DBF /* bias_conv_3.dat in Resources */,
 				ACC1F4A81E2B361300515DBF /* weights_mixed_5_tower_1_conv_4.dat in Resources */,
@@ -1390,18 +1324,14 @@
 				AC22EC201E2AF0D0003433D1 /* ViewController.m in Sources */,
 				ACC1F5291E2B534700515DBF /* UIProgressView+AFNetworking.m in Sources */,
 				AC22EC1D1E2AF0D0003433D1 /* AppDelegate.m in Sources */,
-				68AC9F9B1E2B62C20003099F /* UIImage+KVNImageEffects.m in Sources */,
 				ACC1F5261E2B534700515DBF /* UIAlertView+AFNetworking.m in Sources */,
 				ACC1F5331E2B534700515DBF /* PINDiskCache.m in Sources */,
 				ACC1F5301E2B534700515DBF /* XMLDictionary.m in Sources */,
-				68AC9F9E1E2B62C20003099F /* KVNRotationViewController.m in Sources */,
 				ACC1F5351E2B534700515DBF /* README.md in Sources */,
-				68AC9F9D1E2B62C20003099F /* KVNProgressConfiguration.m in Sources */,
 				ACC1F51C1E2B534700515DBF /* AFNetworkReachabilityManager.m in Sources */,
 				ACC1F3581E2B2EF000515DBF /* Inception3Net.swift in Sources */,
 				ACC1F5271E2B534700515DBF /* UIButton+AFNetworking.m in Sources */,
 				ACC1F51E1E2B534700515DBF /* AFURLConnectionOperation.m in Sources */,
-				68AC9F9C1E2B62C20003099F /* KVNProgress.m in Sources */,
 				ACC1F52C1E2B534700515DBF /* FGAzureToken.m in Sources */,
 				ACC1F5251E2B534700515DBF /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				ACC1F5231E2B534700515DBF /* README.md in Sources */,
@@ -1410,13 +1340,11 @@
 				ACC1F52F1E2B534700515DBF /* NSString+FGTranslator.m in Sources */,
 				ACC1F51B1E2B534700515DBF /* AFHTTPSessionManager.m in Sources */,
 				ACC1F51F1E2B534700515DBF /* AFURLRequestSerialization.m in Sources */,
-				68AC9F9A1E2B62C20003099F /* UIImage+KVNEmpty.m in Sources */,
 				AC22EC1A1E2AF0D0003433D1 /* main.m in Sources */,
 				AC7E5E741E2AF15800EAFCA5 /* OverlayViewController.m in Sources */,
 				ACC1F3591E2B2EF000515DBF /* SlimMPSCNN.swift in Sources */,
 				ACC1F51A1E2B534700515DBF /* AFHTTPRequestOperationManager.m in Sources */,
 				ACC1F51D1E2B534700515DBF /* AFSecurityPolicy.m in Sources */,
-				68AC9F991E2B62C20003099F /* UIColor+KVNContrast.m in Sources */,
 				ACC1F52B1E2B534700515DBF /* UIWebView+AFNetworking.m in Sources */,
 				ACC1F5201E2B534700515DBF /* AFURLResponseSerialization.m in Sources */,
 				ACC1F5281E2B534700515DBF /* UIImageView+AFNetworking.m in Sources */,
