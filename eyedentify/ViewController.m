@@ -31,6 +31,9 @@
     [cameraView.layer addSublayer:previewLayer];
     
     [self.view addSubview:cameraView];
+    
+    OverlayViewController *overlayViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"OverlayViewController"];
+    [self.view addSubview:overlayViewController.view];
 
     // Do any additional setup after loading the view, typically from a nib.
 }

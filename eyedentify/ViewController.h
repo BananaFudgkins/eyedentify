@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <AVKit/AVKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import "OverlayViewController.h"
 
 @interface ViewController : UIViewController
 
