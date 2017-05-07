@@ -1116,7 +1116,7 @@
 				TargetAttributes = {
 					AC22EC141E2AF0D0003433D1 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = NLW324UDS8;
+						DevelopmentTeam = 85Q84CPFAN;
 						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 					};
@@ -1564,7 +1564,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = NLW324UDS8;
+				DEVELOPMENT_TEAM = 85Q84CPFAN;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1573,7 +1573,7 @@
 				INFOPLIST_FILE = eyedentify/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Mlab-Technologies.eyedentify";
+				PRODUCT_BUNDLE_IDENTIFIER = com.pixelbypixel.eyedentify;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1584,7 +1584,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = NLW324UDS8;
+				DEVELOPMENT_TEAM = 85Q84CPFAN;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1593,7 +1593,7 @@
 				INFOPLIST_FILE = eyedentify/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Mlab-Technologies.eyedentify";
+				PRODUCT_BUNDLE_IDENTIFIER = com.pixelbypixel.eyedentify;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
