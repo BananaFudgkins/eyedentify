@@ -573,8 +573,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				ACC1F3551E2B2E6E00515DBF /* Metal.framework in Frameworks */,
-				ACC1F3531E2B2E6B00515DBF /* MetalKit.framework in Frameworks */,
 				ACC1F3511E2B2E6800515DBF /* MetalPerformanceShaders.framework in Frameworks */,
+				ACC1F3531E2B2E6B00515DBF /* MetalKit.framework in Frameworks */,
 				AC7E5E851E2B056500EAFCA5 /* SystemConfiguration.framework in Frameworks */,
 				AC7E5E7F1E2AFBD800EAFCA5 /* ImageIO.framework in Frameworks */,
 				AC7E5E7D1E2AFBAD00EAFCA5 /* CoreImage.framework in Frameworks */,
@@ -1576,7 +1576,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.pixelbypixel.eyedentify;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1596,7 +1596,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.pixelbypixel.eyedentify;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
