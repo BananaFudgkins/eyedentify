@@ -18,11 +18,12 @@
 #import <MetalPerformanceShaders/MetalPerformanceShaders.h>
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
+#import <Speech/Speech.h>
 #import "FGTranslator.h"
 #import "AFNetworking.h"
 #import "KVNProgress.h"
 
-@interface ViewController : UIViewController <AVSpeechSynthesizerDelegate, SpeechKitDelegate, SKRecognizerDelegate, UIGestureRecognizerDelegate> {
+@interface ViewController : UIViewController <AVSpeechSynthesizerDelegate, SpeechKitDelegate, SKRecognizerDelegate, UIGestureRecognizerDelegate, SFSpeechRecognizerDelegate, SFSpeechRecognitionTaskDelegate> {
     SKRecognizer *voiceSearch;
     enum {
         TS_IDLE,
@@ -37,6 +38,10 @@
 @property (strong, nonatomic) IBOutlet UIButton *fullScreenButton;
 @property (nonatomic) BOOL shouldRevert;
 @property (strong, nonatomic) IBOutlet UILabel *recognizedObjectLabel;
+@property (strong, nonatomic) SFSpeechRecognizer *recognizer;
+@property (strong, nonatomic) SFSpeechAudioBufferRecognitionRequest *request;
+@property (strong, nonatomic) SFSpeechRecognitionTask *recognitionTask;
+@property (strong, nonatomic) AVAudioEngine *audioEngine;
 
 @end
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		68D90C5A1EC4E7F7000BAD57 /* Speech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68D90C591EC4E7F7000BAD57 /* Speech.framework */; };
 		AC1464401E2B7FBD00789231 /* UIColor+KVNContrast.m in Sources */ = {isa = PBXBuildFile; fileRef = AC1464341E2B7FBD00789231 /* UIColor+KVNContrast.m */; };
 		AC1464411E2B7FBD00789231 /* UIImage+KVNEmpty.m in Sources */ = {isa = PBXBuildFile; fileRef = AC1464361E2B7FBD00789231 /* UIImage+KVNEmpty.m */; };
 		AC1464421E2B7FBD00789231 /* UIImage+KVNImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = AC1464381E2B7FBD00789231 /* UIImage+KVNImageEffects.m */; };
@@ -274,6 +275,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		68D90C591EC4E7F7000BAD57 /* Speech.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Speech.framework; path = System/Library/Frameworks/Speech.framework; sourceTree = SDKROOT; };
 		AC1464331E2B7FBD00789231 /* UIColor+KVNContrast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+KVNContrast.h"; sourceTree = "<group>"; };
 		AC1464341E2B7FBD00789231 /* UIColor+KVNContrast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+KVNContrast.m"; sourceTree = "<group>"; };
 		AC1464351E2B7FBD00789231 /* UIImage+KVNEmpty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+KVNEmpty.h"; sourceTree = "<group>"; };
@@ -572,6 +574,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				68D90C5A1EC4E7F7000BAD57 /* Speech.framework in Frameworks */,
 				ACC1F3551E2B2E6E00515DBF /* Metal.framework in Frameworks */,
 				ACC1F3511E2B2E6800515DBF /* MetalPerformanceShaders.framework in Frameworks */,
 				ACC1F3531E2B2E6B00515DBF /* MetalKit.framework in Frameworks */,
@@ -715,6 +718,7 @@
 		AC7E5E751E2AF1C500EAFCA5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				68D90C591EC4E7F7000BAD57 /* Speech.framework */,
 				ACC1F3541E2B2E6E00515DBF /* Metal.framework */,
 				ACC1F3521E2B2E6B00515DBF /* MetalKit.framework */,
 				ACC1F3501E2B2E6800515DBF /* MetalPerformanceShaders.framework */,

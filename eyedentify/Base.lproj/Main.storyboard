@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -118,7 +118,7 @@
                                 <rect key="frame" x="37" y="377" width="301" height="212"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Try asking:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CLo-Pq-cR5">
-                                        <rect key="frame" x="88" y="70" width="126" height="29"/>
+                                        <rect key="frame" x="87.5" y="70" width="126" height="29"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="29" id="BbT-11-Uaf"/>
                                         </constraints>
@@ -127,7 +127,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&quot;What am I looking at?&quot; " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wbq-jc-1m8">
-                                        <rect key="frame" x="23" y="104" width="257" height="30"/>
+                                        <rect key="frame" x="22.5" y="104" width="257" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="AhK-vs-tzP"/>
                                         </constraints>
@@ -136,7 +136,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&quot;What is this in French?&quot; " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l4t-k7-E7I">
-                                        <rect key="frame" x="17" y="139" width="268" height="27"/>
+                                        <rect key="frame" x="16.5" y="139" width="268" height="27"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="27" id="sEa-pm-cYv"/>
                                         </constraints>
@@ -145,7 +145,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="or tap the screen" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t6C-xJ-fIj">
-                                        <rect key="frame" x="54" y="171" width="194" height="29"/>
+                                        <rect key="frame" x="53.5" y="171" width="194" height="29"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="29" id="FfI-A0-mi1"/>
                                         </constraints>
@@ -162,8 +162,10 @@
                                         </subviews>
                                         <color key="backgroundColor" red="0.90588235294117647" green="0.9137254901960784" blue="0.91764705882352937" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="RZZ-K8-a4W" secondAttribute="bottom" constant="4" id="KpK-Dc-opr"/>
                                             <constraint firstItem="RZZ-K8-a4W" firstAttribute="centerY" secondItem="gzG-EL-PXe" secondAttribute="centerY" id="WSj-zY-FK4"/>
                                             <constraint firstItem="RZZ-K8-a4W" firstAttribute="top" secondItem="gzG-EL-PXe" secondAttribute="top" constant="4" id="gml-qz-8nu"/>
+                                            <constraint firstAttribute="trailing" secondItem="RZZ-K8-a4W" secondAttribute="trailing" constant="4" id="iIe-ui-fVE"/>
                                             <constraint firstItem="RZZ-K8-a4W" firstAttribute="centerX" secondItem="gzG-EL-PXe" secondAttribute="centerX" id="lAX-eK-BR1"/>
                                             <constraint firstItem="RZZ-K8-a4W" firstAttribute="leading" secondItem="gzG-EL-PXe" secondAttribute="leading" constant="4" id="tCc-5h-hUS"/>
                                         </constraints>

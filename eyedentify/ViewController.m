@@ -32,6 +32,7 @@
     UIView *cameraView;
     UIPinchGestureRecognizer *pinchRecognizer;
     UITapGestureRecognizer *tapGestureRecognizer;
+    AVAudioInputNode *inputNode;
     BOOL isRecording;
 }
 
@@ -75,6 +76,8 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     overlayViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"OverlayViewController"];
     [self.view addSubview:overlayViewController.view];
     
+    self.audioEngine = [[AVAudioEngine alloc] init];
+    
     [self.view addSubview:self.fullScreenButton];
     // Do any additional setup after loading the view, typically from a nib.
 }
@@ -105,6 +108,8 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     self.vImage = [[UIImageView alloc]init];
     
     recognitionLanguage = @"English";
+    self.recognizer = [[SFSpeechRecognizer alloc] initWithLocale:[NSLocale currentLocale]];
+    self.recognizer.delegate = self;
     
     //Init speech synthesizer and gesture recognizers
     
@@ -142,7 +147,16 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
 }
 
 - (void)handleTap {
-    [voiceSearch stopRecording];
+    NSLog(@"The screen was tapped");
+    
+    [inputNode removeTapOnBus:0];
+    [_recognitionTask cancel];
+    _recognitionTask = nil;
+    
+    if (transactionState == TS_RECORDING) {
+        [voiceSearch stopRecording];
+    }
+    
     isRecognizing = YES;
     touchesActive = YES;
      
@@ -255,7 +269,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
             [self runNeuralNet];
         });
     }
-    else if ([recognizedText containsString:@"am I looking at now"] || [recognizedText containsString:@"hat is this now"] || [recognizedText containsString:@"hat about now"] || [recognizedText containsString:@"And now"]) {
+    else if ([recognizedText containsString:@"am I looking at now"] || [recognizedText containsString:@"what is this now"] || [recognizedText containsString:@"what about now"] || [recognizedText containsString:@"And now"]) {
         
         group = dispatch_group_create();
         [self grabFrameFromVideo];
@@ -264,7 +278,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
             [self runNeuralNet];
         });
     }
-    else if ([recognizedText containsString:@"am I looking at"] || [recognizedText containsString:@"hat is this"]) {
+    else if ([recognizedText containsString:@"am I looking at"] || [recognizedText containsString:@"what is this"]) {
         
         group = dispatch_group_create();
         [self grabFrameFromVideo];
@@ -276,7 +290,20 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     else {
         //restart speech recognition
         if (touchesActive == NO) {
-            [self performSelector:@selector(beginSpeechRecognition) withObject:nil afterDelay:0.01];
+            if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusDenied ||
+                ![SFSpeechRecognizer class]) {
+                [self performSelector:@selector(beginSpeechRecognition) withObject:nil afterDelay:0.01];
+            }
+            if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusNotDetermined) {
+                [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
+                    if (status == SFSpeechRecognizerAuthorizationStatusAuthorized) {
+                        [self performSelector:@selector(beginNativeSpeechRecognition) withObject:nil afterDelay:0.01];
+                    }
+                }];
+            }
+            if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusAuthorized) {
+                [self performSelector:@selector(beginNativeSpeechRecognition) withObject:nil afterDelay:0.01];
+            }
         }
     }
 }
@@ -430,7 +457,17 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
             if (touchesActive == NO) {
                 NSLog(@"Begun for english");
             }
-            [self beginSpeechRecognition];
+            if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusDenied ||
+                ![SFSpeechRecognizer class]) {
+                [self beginSpeechRecognition];
+            }
+            if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusNotDetermined) {
+                [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
+                    if (status == SFSpeechRecognizerAuthorizationStatusAuthorized) {
+                        [self beginNativeSpeechRecognition];
+                    }
+                }];
+            }
         }
         isRecognizing = NO;
         touchesActive = NO;
@@ -439,7 +476,19 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
         NSLog(@"Restart called");
         //Re-start speech recognition
         AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
-        [self beginSpeechRecognition];
+        if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusDenied) {
+            [self beginSpeechRecognition];
+        } else if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusNotDetermined) {
+            [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
+                if (status == SFSpeechRecognizerAuthorizationStatusAuthorized) {
+                    [self beginNativeSpeechRecognition];
+                } else {
+                    [self beginSpeechRecognition];
+                }
+            }];
+        } else {
+            [self beginNativeSpeechRecognition];
+        }
     }
 }
 
@@ -479,6 +528,10 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
         NSLog(@"Result: %@", secondLine);
         [self speakResults];
     }
+    
+    [inputNode removeTapOnBus:0];
+    [_recognitionTask cancel];
+    _recognitionTask = nil;
 }
 
 - (void)speakResults {
@@ -610,6 +663,172 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
                                            detection:detectionType
                                             language:@"en_US"
                                             delegate:self];
+}
+
+- (void)beginNativeSpeechRecognition {
+    NSLog(@"Setting up speech recognition...");
+    
+    if (_recognitionTask != nil) {
+        [_recognitionTask cancel];
+        self.recognitionTask = nil;
+    }
+    
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    [audioSession setCategory:AVAudioSessionCategoryRecord error:nil];
+    [audioSession setMode:AVAudioSessionModeMeasurement error:nil];
+    [audioSession setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
+    
+    _request = [[SFSpeechAudioBufferRecognitionRequest alloc] init];
+    
+    inputNode = _audioEngine.inputNode;
+    SFSpeechAudioBufferRecognitionRequest *recognitionRequest = _request;
+    recognitionRequest.shouldReportPartialResults = YES;
+    
+    _recognitionTask = [_recognizer recognitionTaskWithRequest:recognitionRequest resultHandler:^(SFSpeechRecognitionResult * _Nullable result, NSError * _Nullable error) {
+        BOOL isFinal = NO;
+        
+        if(result) {
+            recognizedText = result.bestTranscription.formattedString;
+            isFinal = result.isFinal;
+        }
+        
+        if (error || result.isFinal) {
+            [self.audioEngine stop];
+            [inputNode removeTapOnBus:0];
+            
+            self.request = nil;
+            self.recognitionTask = nil;
+        }
+    }];
+    
+    AVAudioFormat *audioFormat = [inputNode outputFormatForBus:0];
+    [inputNode installTapOnBus:0 bufferSize:1024 format:audioFormat block:^(AVAudioPCMBuffer * _Nonnull buffer, AVAudioTime * _Nonnull when) {
+        [self.request appendAudioPCMBuffer:buffer];
+    }];
+    
+    [_audioEngine prepare];
+    
+    [_audioEngine startAndReturnError:nil];
+}
+
+- (void)speechRecognitionDidDetectSpeech:(SFSpeechRecognitionTask *)task {
+    NSLog(@"Speech was detected");
+}
+
+- (void)speechRecognitionTask:(SFSpeechRecognitionTask *)task didHypothesizeTranscription:(SFTranscription *)transcription {
+    NSLog(@"The task finished");
+    
+    isRecognizing = YES;
+    
+    recognizedText = transcription.formattedString;
+    NSLog(@"Recognized text: %@", recognizedText);
+    
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    if ([recognizedText containsString:@"in French"]) {
+        recognitionLanguage = @"French";
+        
+        group = dispatch_group_create();
+        [self grabFrameFromVideo];
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            //Grab still frame from video and run neural net once that completes
+            [self runNeuralNet];
+        });
+    }
+    else if ([recognizedText containsString:@"in Spanish"]) {
+        recognitionLanguage = @"Spanish";
+        
+        group = dispatch_group_create();
+        [self grabFrameFromVideo];
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            //Grab still frame from video and run neural net once that completes
+            [self runNeuralNet];
+        });
+    }
+    else if ([recognizedText containsString:@"in Russian"]) {
+        recognitionLanguage = @"Russian";
+        
+        group = dispatch_group_create();
+        [self grabFrameFromVideo];
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            //Grab still frame from video and run neural net once that completes
+            [self runNeuralNet];
+        });
+    }
+    else if ([recognizedText containsString:@"in English"]) {
+        recognitionLanguage = @"English";
+        
+        group = dispatch_group_create();
+        [self grabFrameFromVideo];
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            //Grab still frame from video and run neural net once that completes
+            [self runNeuralNet];
+        });
+    }
+    else if ([recognizedText containsString:@"in German"]) {
+        recognitionLanguage = @"German";
+        
+        group = dispatch_group_create();
+        [self grabFrameFromVideo];
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            //Grab still frame from video and run neural net once that completes
+            [self runNeuralNet];
+        });
+    }
+    else if ([recognizedText containsString:@"in Mandarin"]) {
+        recognitionLanguage = @"Mandarin";
+        
+        group = dispatch_group_create();
+        [self grabFrameFromVideo];
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            //Grab still frame from video and run neural net once that completes
+            [self runNeuralNet];
+        });
+    }
+    else if ([recognizedText containsString:@"in Italian"]) {
+        recognitionLanguage = @"Italian";
+        
+        group = dispatch_group_create();
+        [self grabFrameFromVideo];
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            //Grab still frame from video and run neural net once that completes
+            [self runNeuralNet];
+        });
+    }
+    else if ([recognizedText containsString:@"am I looking at now"] || [recognizedText containsString:@"what is this now"] || [recognizedText containsString:@"what about now"] || [recognizedText containsString:@"And now"]) {
+        
+        group = dispatch_group_create();
+        [self grabFrameFromVideo];
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            //Grab still frame from video and run neural net once that completes
+            [self runNeuralNet];
+        });
+    }
+    else if ([recognizedText containsString:@"am I looking at"] || [recognizedText containsString:@"what is this"]) {
+        
+        group = dispatch_group_create();
+        [self grabFrameFromVideo];
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            //Grab still frame from video and run neural net once that completes
+            [self runNeuralNet];
+        });
+    }
+    else {
+        //restart speech recognition
+        if (touchesActive == NO) {
+            if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusDenied ||
+                ![SFSpeechRecognizer class]) {
+                [self performSelector:@selector(beginSpeechRecognition) withObject:nil afterDelay:0.01];
+            }else if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusNotDetermined) {
+                [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
+                    if (status == SFSpeechRecognizerAuthorizationStatusAuthorized) {
+                        [self performSelector:@selector(beginNativeSpeechRecognition) withObject:nil afterDelay:0.01];
+                    }
+                }];
+            } else {
+                [self performSelector:@selector(beginNativeSpeechRecognition) withObject:nil afterDelay:0.01];
+            }
+        }
+    }
 }
 
 - (void)handlePinchToZoomRecognizer:(UIPinchGestureRecognizer *)pinchRecognizer {

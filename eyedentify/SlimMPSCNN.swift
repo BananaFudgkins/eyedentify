@@ -17,6 +17,7 @@ import MetalPerformanceShaders
         - adding network parameters (weights and bias binaries by memory mapping the binaries)
         - getting our convolution layer
  */
+@available(iOS 10.0, *)
 @objc class SlimMPSCNNConvolution: MPSCNNConvolution{
     
     /**
