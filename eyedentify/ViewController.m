@@ -41,7 +41,7 @@
 const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0x61, 0xc1, 0x0f, 0x30, 0x0a, 0xde, 0xd8, 0x49, 0xe6, 0x27, 0xb9, 0x60, 0x81, 0xad, 0x49, 0x3f, 0x7f, 0x5e, 0x8e, 0xe5, 0x16, 0xa1, 0x8b, 0xa9, 0x3b, 0x3f, 0xea, 0x4d, 0x14, 0x37, 0x08, 0x75, 0xf8, 0x18, 0xa5, 0x02, 0xf6, 0x7d, 0x4c, 0xdc, 0xa5, 0x05, 0x3c, 0x26, 0xb2, 0x85, 0x65, 0x31, 0xe3, 0xf3, 0x17, 0xf9, 0x95, 0xa2, 0xa2, 0xd0, 0xe1, 0x8c, 0x1e};
 
 @implementation ViewController
-@synthesize stillImageOutput;
+@synthesize photoOutput;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -55,21 +55,25 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     AVCaptureVideoPreviewLayer *previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:captureSession];
     self.shouldRevert = NO;
     
-    stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
-    NSDictionary *outputSettings = [[NSDictionary alloc] initWithObjectsAndKeys: AVVideoCodecJPEG, AVVideoCodecKey, nil];
-    [stillImageOutput setOutputSettings:outputSettings];
+    //Add live camera preview as a subview, though only if the camera is supported
     
-    [captureSession addInput:cameraInput];
-    [captureSession addOutput:stillImageOutput];
-    [captureSession startRunning];
-    
-    //Add live camera preview as a subview
-    
-    cameraView = [[UIView alloc]initWithFrame:self.view.frame];
-    previewLayer.frame = cameraView.bounds;
-    [cameraView.layer addSublayer:previewLayer];
-    
-    [self.view addSubview:cameraView];
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        photoOutput = [[AVCapturePhotoOutput alloc] init];
+        
+        [captureSession addInput:cameraInput];
+        [captureSession addOutput:photoOutput];
+        [captureSession startRunning];
+        
+        cameraView = [[UIView alloc]initWithFrame:self.view.frame];
+        previewLayer.frame = cameraView.bounds;
+        [cameraView.layer addSublayer:previewLayer];
+        
+        [self.view addSubview:cameraView];
+    } else {
+        [UIView animateWithDuration:0.25 animations:^{
+            self.noCameraLabel.alpha = 1;
+        }];
+    }
     
     //Initialize and add the graphical overlay as a subview
     
@@ -84,6 +88,9 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+    self.noCameraLabel.alpha = 0;
+    self.noCameraLabel.textColor = [UIColor whiteColor];
     
     //Initialize speech recognition framework
     
@@ -101,7 +108,11 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     
     textureLoader = [[MTKTextureLoader alloc]initWithDevice:device];
     
-    Net = [[Inception3Net alloc]initWithCommandQueue:commandQueue];
+    if (@available(iOS 11.0, *)) {
+        Net = [[Inception3Net alloc]initWithCommandQueue:commandQueue];
+    } else {
+        // Fallback on earlier versions
+    }
     
     ciContext = [CIContext contextWithMTLDevice:device];
     
@@ -615,7 +626,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     //Grab still frame from video stream and store it as a UIImage
     
     AVCaptureConnection *videoConnection = nil;
-    for (AVCaptureConnection *connection in stillImageOutput.connections)
+    for (AVCaptureConnection *connection in photoOutput.connections)
     {
         for (AVCaptureInputPort *port in [connection inputPorts])
         {
@@ -628,9 +639,15 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
         if (videoConnection) { break; }
     }
     
-    NSLog(@"about to request a capture from: %@", stillImageOutput);
+    NSLog(@"about to request a capture from: %@", photoOutput);
     dispatch_group_enter(group);
-    [stillImageOutput captureStillImageAsynchronouslyFromConnection:videoConnection completionHandler: ^(CMSampleBufferRef imageSampleBuffer, NSError *error)
+    
+    AVCapturePhotoSettings *settings = [AVCapturePhotoSettings photoSettingsWithFormat:[[NSDictionary alloc] initWithObjectsAndKeys:AVVideoCodecTypeJPEG, AVVideoCodecKey, nil]];
+    
+    [photoOutput capturePhotoWithSettings:settings delegate:self];
+    
+    // Deprecated code
+    /* [stillImageOutput captureStillImageAsynchronouslyFromConnection:videoConnection completionHandler: ^(CMSampleBufferRef imageSampleBuffer, NSError *error)
      {
          CFDictionaryRef exifAttachments = CMGetAttachment( imageSampleBuffer, kCGImagePropertyExifDictionary, NULL);
          if (exifAttachments)
@@ -646,7 +663,11 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
          
          self.vImage.image = image;
          dispatch_group_leave(group);
-     }];
+     }]; */
+}
+
+- (void)captureOutput:(AVCapturePhotoOutput *)output didFinishProcessingPhoto:(AVCapturePhoto *)photo error:(NSError *)error {
+    
 }
 
 - (void)beginSpeechRecognition {

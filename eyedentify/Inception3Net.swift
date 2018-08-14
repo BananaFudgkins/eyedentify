@@ -99,7 +99,8 @@ let textureFormat = MPSImageFeatureChannelFormat.float16
          - Returns:
             Void
      */
-     public init(withCommandQueue inputCommandQueue : MTLCommandQueue){
+    @available(iOS 11.0, *)
+    public init(withCommandQueue inputCommandQueue : MTLCommandQueue){
         
         // keep an instance of device and commandQueue around for use
         device = inputCommandQueue.device

@@ -23,7 +23,7 @@
 #import "AFNetworking.h"
 #import "KVNProgress.h"
 
-@interface ViewController : UIViewController <AVSpeechSynthesizerDelegate, SpeechKitDelegate, SKRecognizerDelegate, UIGestureRecognizerDelegate, SFSpeechRecognizerDelegate, SFSpeechRecognitionTaskDelegate> {
+@interface ViewController : UIViewController <AVSpeechSynthesizerDelegate, AVCapturePhotoCaptureDelegate, SpeechKitDelegate, SKRecognizerDelegate, UIGestureRecognizerDelegate, SFSpeechRecognizerDelegate, SFSpeechRecognitionTaskDelegate> {
     SKRecognizer *voiceSearch;
     enum {
         TS_IDLE,
@@ -33,11 +33,15 @@
     } transactionState;
 }
 
-@property(nonatomic, retain) AVCaptureStillImageOutput *stillImageOutput;
+@property(nonatomic, retain) AVCapturePhotoOutput *photoOutput;
 @property(nonatomic, retain) IBOutlet UIImageView *vImage;
 @property (strong, nonatomic) IBOutlet UIButton *fullScreenButton;
+
 @property (nonatomic) BOOL shouldRevert;
+
 @property (strong, nonatomic) IBOutlet UILabel *recognizedObjectLabel;
+@property (strong, nonatomic) IBOutlet UILabel *noCameraLabel;
+
 @property (strong, nonatomic) SFSpeechRecognizer *recognizer;
 @property (strong, nonatomic) SFSpeechAudioBufferRecognitionRequest *request;
 @property (strong, nonatomic) SFSpeechRecognitionTask *recognitionTask;
