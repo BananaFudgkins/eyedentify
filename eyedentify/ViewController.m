@@ -93,11 +93,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     
     textureLoader = [[MTKTextureLoader alloc]initWithDevice:device];
     
-    if (@available(iOS 11.0, *)) {
-        Net = [[Inception3Net alloc]initWithCommandQueue:commandQueue];
-    } else {
-        // Fallback on earlier versions
-    }
+    Net = [[Inception3Net alloc]initWithCommandQueue:commandQueue];
     
     ciContext = [CIContext contextWithMTLDevice:device];
     
@@ -625,7 +621,6 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     }
     
     NSLog(@"about to request a capture from: %@", photoOutput);
-    dispatch_group_enter(group);
     
     AVCapturePhotoSettings *settings = [AVCapturePhotoSettings photoSettingsWithFormat:[[NSDictionary alloc] initWithObjectsAndKeys:AVVideoCodecTypeJPEG, AVVideoCodecKey, nil]];
     
@@ -652,7 +647,10 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
 }
 
 - (void)captureOutput:(AVCapturePhotoOutput *)output didFinishProcessingPhoto:(AVCapturePhoto *)photo error:(NSError *)error {
+    NSData *imageData = photo.fileDataRepresentation;
+    UIImage *image = [UIImage imageWithData:imageData];
     
+    self.vImage.image = image;
 }
 
 - (void)beginSpeechRecognition {
