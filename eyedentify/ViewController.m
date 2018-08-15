@@ -28,7 +28,6 @@
     BOOL touchesActive;
 
     AVCaptureDevice *captureDevice;
-    UIView *cameraView;
     UIPinchGestureRecognizer *pinchRecognizer;
     UITapGestureRecognizer *tapGestureRecognizer;
     AVAudioInputNode *inputNode;
@@ -63,28 +62,20 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
         [captureSession addOutput:photoOutput];
         [captureSession startRunning];
         
-        cameraView = [[UIView alloc]initWithFrame:self.view.frame];
-        previewLayer.frame = cameraView.bounds;
-        [cameraView.layer addSublayer:previewLayer];
+        previewLayer.frame = self.view.bounds;
+        [self.view.layer insertSublayer:previewLayer atIndex:0];
         
-        [self.view addSubview:cameraView];
     } else {
-        [UIView animateWithDuration:0.25 animations:^{
-            self.noCameraLabel.alpha = 1;
-        }];
+        self.noCameraLabel.hidden = NO;
     }
     
     self.audioEngine = [[AVAudioEngine alloc] init];
     
-    [self.view addSubview:self.fullScreenButton];
     // Do any additional setup after loading the view, typically from a nib.
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-    self.noCameraLabel.alpha = 0;
-    self.noCameraLabel.textColor = [UIColor whiteColor];
     
     //Initialize speech recognition framework
     
@@ -176,7 +167,7 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     //Prevent unwanted touches from being proccessed
     
-    if ([touch view] == self.fullScreenButton || isRecording == NO){
+    if (isRecording == NO){
         // If it is, prevent all of the delegate's gesture recognizers
         // from receiving the touch
         return NO;
@@ -861,37 +852,6 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
         } else {
             NSLog(@"Oh shit an error occurred: %@", error);
         }
-    }
-}
-
-- (IBAction)fullScreenPressed:(UIButton *)sender {
-    //Toggle full screen mode (graphical overlay is animated out of the view)
-    
-    if (self.shouldRevert == NO) {
-        [sender setTitle:@"Revert" forState:UIControlStateNormal];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-                overlayViewController.logoView.frame = CGRectMake(overlayViewController.logoView.frame.origin.x, overlayViewController.logoView.frame.origin.y - 400, overlayViewController.logoView.frame.size.width,
-                                                                  overlayViewController.logoView.frame.size.height);
-                overlayViewController.suggestionView.frame = CGRectMake(overlayViewController.suggestionView.frame.origin.x, overlayViewController.suggestionView.frame.origin.y - 600, overlayViewController.suggestionView.frame.size.width,
-                                                                        overlayViewController.suggestionView.frame.size.height);
-            } completion:^(BOOL finished) {
-                NSLog(@"The animation finished.");
-                self.shouldRevert = YES;
-            }];
-        });
-    } else if (self.shouldRevert == YES) {
-        [sender setTitle:@"Full Screen" forState:UIControlStateNormal];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-                overlayViewController.logoView.frame = CGRectMake(37, 50, overlayViewController.logoView.frame.size.width,
-                                                                  overlayViewController.logoView.frame.size.height);
-                overlayViewController.suggestionView.frame = CGRectMake(37, 377, overlayViewController.suggestionView.frame.size.width, overlayViewController.suggestionView.frame.size.height);
-            } completion:^(BOOL finished) {
-                NSLog(@"The second animation finished.");
-                self.shouldRevert = NO;
-            }];
-        });
     }
 }
 
