@@ -196,10 +196,10 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
         
         group = dispatch_group_create();
         [self grabFrameFromVideo];
-        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        /* dispatch_group_notify(group, dispatch_get_main_queue(), ^{
             //Grab still frame from video and run neural net once that completes
             [self runNeuralNet];
-        });
+        }); */
     }
     else if ([recognizedText containsString:@"in Spanish"]) {
         recognitionLanguage = @"Spanish";
@@ -651,6 +651,10 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
     UIImage *image = [UIImage imageWithData:imageData];
     
     self.vImage.image = image;
+    
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        [self runNeuralNet];
+    });
 }
 
 - (void)beginSpeechRecognition {
