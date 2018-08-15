@@ -12,7 +12,6 @@
     dispatch_group_t group;
     AVSpeechSynthesizer *synthesizer;
     NSString *recognizedText;
-    OverlayViewController *overlayViewController;
     NSString *recognitionLanguage;
     
     Inception3Net *Net;
@@ -74,11 +73,6 @@ const unsigned char SpeechKitApplicationKey[] = {0x41, 0x12, 0xd5, 0x4d, 0xbb, 0
             self.noCameraLabel.alpha = 1;
         }];
     }
-    
-    //Initialize and add the graphical overlay as a subview
-    
-    overlayViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"OverlayViewController"];
-    [self.view addSubview:overlayViewController.view];
     
     self.audioEngine = [[AVAudioEngine alloc] init];
     
