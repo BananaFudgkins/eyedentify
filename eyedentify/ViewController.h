@@ -13,7 +13,6 @@
 #import <CoreImage/CoreImage.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import <ImageIO/ImageIO.h>
-#import <SpeechKit/SpeechKit.h>
 #import "eyedentify-Swift.h"
 #import <MetalPerformanceShaders/MetalPerformanceShaders.h>
 #import <Metal/Metal.h>
@@ -23,20 +22,14 @@
 #import "AFNetworking.h"
 #import "KVNProgress.h"
 
-@interface ViewController : UIViewController <AVSpeechSynthesizerDelegate, AVCapturePhotoCaptureDelegate, SpeechKitDelegate, SKRecognizerDelegate, UIGestureRecognizerDelegate, SFSpeechRecognizerDelegate, SFSpeechRecognitionTaskDelegate> {
-    SKRecognizer *voiceSearch;
-    enum {
-        TS_IDLE,
-        TS_INITIAL,
-        TS_RECORDING,
-        TS_PROCESSING,
-    } transactionState;
+@interface ViewController : UIViewController <AVSpeechSynthesizerDelegate, AVCapturePhotoCaptureDelegate, UIGestureRecognizerDelegate, SFSpeechRecognizerDelegate, SFSpeechRecognitionTaskDelegate> {
 }
 
 @property(nonatomic, retain) AVCapturePhotoOutput *photoOutput;
 @property(nonatomic, retain) IBOutlet UIImageView *vImage;
 
 @property (nonatomic) BOOL shouldRevert;
+@property (strong, nonatomic) NSTimer *silenceTimer;
 
 @property (strong, nonatomic) IBOutlet UILabel *recognizedObjectLabel;
 @property (strong, nonatomic) IBOutlet UILabel *noCameraLabel;

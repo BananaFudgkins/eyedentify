@@ -28,7 +28,7 @@ let textureFormat = MPSImageFeatureChannelFormat.float16
     * [Original Inception_v3 Network Paper](http://arxiv.org/pdf/1512.00567v3.pdf)
  
  */
-@objc public class Inception3Net: NSObject{
+@objc public class Inception3Net: NSObject {
     
     // we keep the MTLDevice and MTLCommandQueue objects around for ease of use
     var device : MTLDevice!
@@ -100,7 +100,7 @@ let textureFormat = MPSImageFeatureChannelFormat.float16
             Void
      */
     @available(iOS 11.0, *)
-    public init(withCommandQueue inputCommandQueue : MTLCommandQueue){
+    @objc public init(withCommandQueue inputCommandQueue : MTLCommandQueue){
         
         // keep an instance of device and commandQueue around for use
         device = inputCommandQueue.device
@@ -1052,7 +1052,7 @@ let textureFormat = MPSImageFeatureChannelFormat.float16
         - Returns:
             Void
      */
-    public func forward( commandBuffer: MTLCommandBuffer, sourceTexture : MTLTexture?){
+    @objc public func forward( commandBuffer: MTLCommandBuffer, sourceTexture : MTLTexture?){
 
         // CNN graphs usually work best if we populate MPS's internal texture cache
         // with a couple of large textures, which will then be used to back most or 
@@ -1952,7 +1952,7 @@ let textureFormat = MPSImageFeatureChannelFormat.float16
          - Returns:
             A string with top-5 valid labels ready to be put in predictLabel
      */
-    public func getLabel()->String{
+    @objc public func getLabel()->String{
         
         // gather measurements of MPSImage to use to get out probabilities
         let width = sftImage.width
