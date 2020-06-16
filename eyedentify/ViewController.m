@@ -64,10 +64,10 @@
         [captureSession addOutput:photoOutput];
         
         AVCaptureVideoPreviewLayer *previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:captureSession];
-        previewLayer.frame = CGRectMake(self.view.safeAreaInsets.left,
-                                        self.view.safeAreaInsets.top,
-                                        self.view.bounds.size.width - self.view.safeAreaInsets.left - self.view.safeAreaInsets.right,
-                                        self.view.bounds.size.height - self.view.safeAreaInsets.top);
+        previewLayer.frame = CGRectMake(0,
+                                        0,
+                                        self.view.bounds.size.width,
+                                        self.view.bounds.size.height);
         [self.view.layer insertSublayer:previewLayer atIndex:0];
         
         [captureSession commitConfiguration];
@@ -221,12 +221,17 @@
 
 #pragma mark - Speech synthesizer delegate
 
+/* - (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer willSpeakRangeOfSpeechString:(NSRange)characterRange utterance:(AVSpeechUtterance *)utterance {
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    [[AVAudioSession sharedInstance] setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
+} */
+
 - (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didStartSpeechUtterance:(AVSpeechUtterance *)utterance {
     //[KVNProgress dismiss];
 }
 
 - (void)speechSynthesizer:(AVSpeechSynthesizer *)returnSynthesizer didFinishSpeechUtterance:(AVSpeechUtterance *)utterance {
-    // [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
+    [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
     
     if (isRecognizing == YES) {
         
@@ -381,7 +386,7 @@
                     [self beginNativeSpeechRecognition];
                 }
             }];
-        } else {
+        } else if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusAuthorized) {
             [self beginNativeSpeechRecognition];
         }
     }
@@ -460,8 +465,6 @@
 
 - (void)speakResults {
     //speak results
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
-    // [[AVAudioSession sharedInstance] setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
     
     if ([recognitionLanguage isEqualToString:@"English"]) {
         //Speak in English
@@ -610,9 +613,19 @@
     }
     
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    [audioSession setCategory:AVAudioSessionCategoryRecord error:nil];
-    [audioSession setMode:AVAudioSessionModeMeasurement error:nil];
+    [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
+    [audioSession setMode:AVAudioSessionModeSpokenAudio error:nil];
     [audioSession setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
+    
+    AVAudioSessionRouteDescription *currentRoute = [[AVAudioSession sharedInstance] currentRoute];
+    for (AVAudioSessionPortDescription *desc in currentRoute.outputs) {
+        if (desc.portType == AVAudioSessionPortHeadphones) {
+            NSLog(@"Headphones are plugged in. Nothing will be overriden.");
+            [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:nil];
+        } else {
+            [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:nil];
+        }
+    }
     
     self.request = [[SFSpeechAudioBufferRecognitionRequest alloc] init];
     

@@ -13,7 +13,6 @@
 #import <CoreImage/CoreImage.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import <ImageIO/ImageIO.h>
-#import "eyedentify-Swift.h"
 #import <MetalPerformanceShaders/MetalPerformanceShaders.h>
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
@@ -39,6 +38,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *recognizedObjectLabel;
 @property (strong, nonatomic) IBOutlet UILabel *noCameraLabel;
 @property (strong, nonatomic) IBOutlet GADBannerView *adBannerView;
+@property (strong, nonatomic) IBOutlet UIView *cameraView;
 
 @property (strong, nonatomic) SFSpeechRecognizer *recognizer;
 @property (strong, nonatomic) SFSpeechAudioBufferRecognitionRequest *request;
