@@ -10,18 +10,19 @@
 
 @interface ViewController () {
     dispatch_group_t group;
-    AVSpeechSynthesizer *synthesizer;
     NSString *recognizedText;
     NSString *recognitionLanguage;
     
-    Inception3Net *Net;
+    // Old neural net stuff.
+    
+    /* Inception3Net *Net;
     id <MTLDevice> device;
     id <MTLCommandQueue> commandQueue;
     int imageNum;
     int total;
     MTKTextureLoader *textureLoader;
     CIContext *ciContext;
-    id <MTLTexture> sourceTexture;
+    id <MTLTexture> sourceTexture; */
     
     NSString *neuralNetworkResult;
     BOOL isRecognizing;
@@ -44,11 +45,12 @@
     
     //Initialize live camera preview
     
-    AVCaptureSession *captureSession = [AVCaptureSession new];
+    AVCaptureSession *captureSession = [[AVCaptureSession alloc] init];
+    [captureSession beginConfiguration];
+    
     captureDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     NSError *error;
     AVCaptureDeviceInput *cameraInput = [[AVCaptureDeviceInput alloc]initWithDevice:captureDevice error:&error];
-    AVCaptureVideoPreviewLayer *previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:captureSession];
     self.shouldRevert = NO;
     
     //Add live camera preview as a subview, though only if the camera is supported
@@ -57,12 +59,19 @@
         photoOutput = [[AVCapturePhotoOutput alloc] init];
         
         [captureSession addInput:cameraInput];
-        [captureSession addOutput:photoOutput];
-        [captureSession startRunning];
         
-        previewLayer.frame = self.view.bounds;
+        captureSession.sessionPreset = AVCaptureSessionPresetPhoto;
+        [captureSession addOutput:photoOutput];
+        
+        AVCaptureVideoPreviewLayer *previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:captureSession];
+        previewLayer.frame = CGRectMake(self.view.safeAreaInsets.left,
+                                        self.view.safeAreaInsets.top,
+                                        self.view.bounds.size.width - self.view.safeAreaInsets.left - self.view.safeAreaInsets.right,
+                                        self.view.bounds.size.height - self.view.safeAreaInsets.top);
         [self.view.layer insertSublayer:previewLayer atIndex:0];
         
+        [captureSession commitConfiguration];
+        [captureSession startRunning];
     } else {
         self.noCameraLabel.hidden = NO;
     }
@@ -71,6 +80,8 @@
     
     // Do any additional setup after loading the view, typically from a nib.
     
+    self.adBannerView.adUnitID = @"ca-app-pub-3940256099942544/2934735716"; // Unit ID is for debug. Change for release and vice versa.
+    [self.adBannerView loadRequest:[GADRequest request]];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -78,17 +89,23 @@
     
     //Initialize Metal and neural net
     
-    device = MTLCreateSystemDefaultDevice();
+    /* device = MTLCreateSystemDefaultDevice();
     
     commandQueue = [device newCommandQueue];
     
-    textureLoader = [[MTKTextureLoader alloc]initWithDevice:device];
+    textureLoader = [[MTKTextureLoader alloc] initWithDevice:device];
     
     Net = [[Inception3Net alloc] initWithCommandQueue:commandQueue];
     
-    ciContext = [CIContext contextWithMTLDevice:device];
+    ciContext = [CIContext contextWithMTLDevice:device]; */
     
-    self.vImage = [[UIImageView alloc]init];
+    MobileNetV2 *mobileNet = [[MobileNetV2 alloc] init];
+    VNCoreMLModel *model = [VNCoreMLModel modelForMLModel:mobileNet.model error:nil];
+    self.classificationRequest = [[VNCoreMLRequest alloc] initWithModel:model completionHandler:^(VNRequest * _Nonnull request, NSError * _Nullable error) {
+        [self processClassificationsForRequest:request error:error];
+    }];
+    
+    self.vImage = [[UIImageView alloc] init];
     
     recognitionLanguage = @"English";
     self.recognizer = [[SFSpeechRecognizer alloc] initWithLocale:[NSLocale localeWithLocaleIdentifier:@"en_US"]];
@@ -97,24 +114,35 @@
     //Init speech synthesizer and gesture recognizers
     
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
-    synthesizer = [[AVSpeechSynthesizer alloc]init];
-    [synthesizer setDelegate:self];
-    AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"Welcome to eyedentify.  After the vibration, please say a command or tap the screen ."];
-    [utterance setRate:.5];
-    [synthesizer speakUtterance:utterance];
+    self.synthesizer = [[AVSpeechSynthesizer alloc] init];
+    self.synthesizer.delegate = self;
     
-    tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-    tapGestureRecognizer.delegate = self;
-    [self.view addGestureRecognizer:tapGestureRecognizer];
-
-    pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchToZoomRecognizer:)];
-    [self.view addGestureRecognizer:pinchRecognizer];
-    
-    [self.view addSubview:self.recognizedObjectLabel];
-    
-    touchesActive = NO;
-    
-    isRecording = NO;
+    if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusAuthorized) {
+        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:@"Welcome to eyedentify.  After the vibration, please say a command or tap the screen ."];
+        [utterance setRate:.5];
+        [self.synthesizer speakUtterance:utterance];
+        
+        tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+        tapGestureRecognizer.delegate = self;
+        [self.view addGestureRecognizer:tapGestureRecognizer];
+        
+        pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchToZoomRecognizer:)];
+        [self.view addGestureRecognizer:pinchRecognizer];
+        
+        [self.view addSubview:self.recognizedObjectLabel];
+        
+        touchesActive = NO;
+        
+        isRecording = NO;
+    } else if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusNotDetermined) {
+        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:@"Welcome to eyedentify. Before you can begin using the app, please grant access to speech recognition."];
+        [utterance setRate:0.5];
+        [self.synthesizer speakUtterance:utterance];
+        
+        touchesActive = NO;
+        
+        isRecording = NO;
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -179,6 +207,7 @@
     });
 } */
 
+#pragma mark - Touch recognizer delegate
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     //Prevent unwanted touches from being proccessed
     
@@ -190,11 +219,15 @@
     return YES;
 }
 
+#pragma mark - Speech synthesizer delegate
+
 - (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didStartSpeechUtterance:(AVSpeechUtterance *)utterance {
     //[KVNProgress dismiss];
 }
 
 - (void)speechSynthesizer:(AVSpeechSynthesizer *)returnSynthesizer didFinishSpeechUtterance:(AVSpeechUtterance *)utterance {
+    // [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
+    
     if (isRecognizing == YES) {
         
         if ([recognitionLanguage isEqualToString:@"French"]) {
@@ -204,12 +237,10 @@
             [[FGTranslator alloc]initWithGoogleAPIKey:@"AIzaSyDOpsPt1JdWFaC_SrxToRd3oLPvJwixjIo"];
             
             [translator translateText:neuralNetworkResult withSource:@"en" target:@"fr" completion:^(NSError *error, NSString *translated, NSString *sourceLanguage) {
-                synthesizer = [[AVSpeechSynthesizer alloc]init];
-                [synthesizer setDelegate:self];
                 AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:translated];
                 [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"fr-FR"]];
                 [utterance setRate:.5];
-                [synthesizer speakUtterance:utterance];
+                [self.synthesizer speakUtterance:utterance];
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.recognizedObjectLabel.text = translated;
@@ -226,12 +257,10 @@
             [[FGTranslator alloc]initWithGoogleAPIKey:@"AIzaSyDOpsPt1JdWFaC_SrxToRd3oLPvJwixjIo"];
             
             [translator translateText:neuralNetworkResult withSource:@"en" target:@"es" completion:^(NSError *error, NSString *translated, NSString *sourceLanguage) {
-                synthesizer = [[AVSpeechSynthesizer alloc]init];
-                [synthesizer setDelegate:self];
                 AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:translated];
                 [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"es-ES"]];
                 [utterance setRate:.5];
-                [synthesizer speakUtterance:utterance];
+                [self.synthesizer speakUtterance:utterance];
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.recognizedObjectLabel.text = translated;
@@ -248,12 +277,10 @@
             [[FGTranslator alloc]initWithGoogleAPIKey:@"AIzaSyDOpsPt1JdWFaC_SrxToRd3oLPvJwixjIo"];
             
             [translator translateText:neuralNetworkResult withSource:@"en" target:@"ru" completion:^(NSError *error, NSString *translated, NSString *sourceLanguage) {
-                synthesizer = [[AVSpeechSynthesizer alloc]init];
-                [synthesizer setDelegate:self];
                 AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:translated];
                 [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"ru-RU"]];
                 [utterance setRate:.5];
-                [synthesizer speakUtterance:utterance];
+                [self.synthesizer speakUtterance:utterance];
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.recognizedObjectLabel.text = translated;
@@ -270,12 +297,10 @@
             [[FGTranslator alloc]initWithGoogleAPIKey:@"AIzaSyDOpsPt1JdWFaC_SrxToRd3oLPvJwixjIo"];
             
             [translator translateText:neuralNetworkResult withSource:@"en" target:@"de" completion:^(NSError *error, NSString *translated, NSString *sourceLanguage) {
-                synthesizer = [[AVSpeechSynthesizer alloc]init];
-                [synthesizer setDelegate:self];
                 AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:translated];
                 [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"de-DE"]];
                 [utterance setRate:.5];
-                [synthesizer speakUtterance:utterance];
+                [self.synthesizer speakUtterance:utterance];
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.recognizedObjectLabel.text = translated;
@@ -292,12 +317,10 @@
             [[FGTranslator alloc]initWithGoogleAPIKey:@"AIzaSyDOpsPt1JdWFaC_SrxToRd3oLPvJwixjIo"];
             
             [translator translateText:neuralNetworkResult withSource:@"en" target:@"zh-TW" completion:^(NSError *error, NSString *translated, NSString *sourceLanguage) {
-                synthesizer = [[AVSpeechSynthesizer alloc]init];
-                [synthesizer setDelegate:self];
                 AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:translated];
                 [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"zh-TW"]];
                 [utterance setRate:.5];
-                [synthesizer speakUtterance:utterance];
+                [self.synthesizer speakUtterance:utterance];
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.recognizedObjectLabel.text = translated;
@@ -314,12 +337,10 @@
             [[FGTranslator alloc]initWithGoogleAPIKey:@"AIzaSyDOpsPt1JdWFaC_SrxToRd3oLPvJwixjIo"];
             
             [translator translateText:neuralNetworkResult withSource:@"en" target:@"it" completion:^(NSError *error, NSString *translated, NSString *sourceLanguage) {
-                synthesizer = [[AVSpeechSynthesizer alloc]init];
-                [synthesizer setDelegate:self];
                 AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:translated];
                 [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"it-IT"]];
                 [utterance setRate:.5];
-                [synthesizer speakUtterance:utterance];
+                [self.synthesizer speakUtterance:utterance];
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.recognizedObjectLabel.text = translated;
@@ -351,8 +372,12 @@
         //Re-start speech recognition
         AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
         if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusNotDetermined) {
+            NSLog(@"Asking for speech recognition permission...");
             [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
                 if (status == SFSpeechRecognizerAuthorizationStatusAuthorized) {
+                    // isRecognizing = YES;
+                    AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:@"Thank you for granting access to speech recognition. After the vibration, please say a command or tap the screen."];
+                    [self.synthesizer speakUtterance:utterance];
                     [self beginNativeSpeechRecognition];
                 }
             }];
@@ -367,11 +392,33 @@
 }
 
 - (void)runNeuralNet {
-    //Run network
-    
+    NSLog(@"Classifying...");
     struct CGImage *cgImg = [self.vImage.image CGImage];
     
-    sourceTexture = [textureLoader newTextureWithCGImage:cgImg options:nil error:nil];
+    VNImageRequestHandler *handler = [[VNImageRequestHandler alloc] initWithCGImage:cgImg options:nil];
+    NSError *error;
+    
+    @try {
+        [handler performRequests:@[self.classificationRequest] error:&error];
+    } @catch (NSException *exception) {
+        NSLog(@"Unable to classify image: %@", error.localizedDescription);
+    } @finally {
+        [inputNode removeTapOnBus:0];
+        [_recognitionTask cancel];
+        _recognitionTask = nil;
+    }
+}
+
+- (void)processClassificationsForRequest:(VNCoreMLRequest *) request error:(NSError *)error {
+    //Run network
+    
+    // Old neural net code.
+    
+    /* struct CGImage *cgImg = [self.vImage.image CGImage];
+
+    sourceTexture = [textureLoader newTextureWithCGImage:cgImg options:@{MTKTextureLoaderOptionTextureStorageMode: @(MTLStorageModePrivate)} error:nil];
+    NSLog(@"Texture storage mode: %lu", (unsigned long)sourceTexture.storageMode);
+    
     
    @autoreleasepool {
         id <MTLCommandBuffer> commandBuffer = [commandQueue commandBuffer];
@@ -397,15 +444,24 @@
         neuralNetworkResult = secondLine;
         NSLog(@"Result: %@", secondLine);
         [self speakResults];
-    }
+    } */
     
-    [inputNode removeTapOnBus:0];
-    [_recognitionTask cancel];
-    _recognitionTask = nil;
+    if (request.results) {
+        NSArray<VNClassificationObservation *> *classifications = request.results;
+        if (classifications.count == 0) {
+            NSLog(@"Nothing was recognized.");
+        } else {
+            VNClassificationObservation *top = classifications[0];
+            neuralNetworkResult = top.identifier;
+            [self speakResults];
+        }
+    }
 }
 
 - (void)speakResults {
     //speak results
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    // [[AVAudioSession sharedInstance] setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
     
     if ([recognitionLanguage isEqualToString:@"English"]) {
         //Speak in English
@@ -417,67 +473,53 @@
         NSTimer *timer;
         timer = [NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(hideLabel) userInfo:nil repeats:NO];
         
-        synthesizer = [[AVSpeechSynthesizer alloc]init];
-        [synthesizer setDelegate:self];
         NSString *stringToSpeak = [@"You are looking at a " stringByAppendingString:neuralNetworkResult];
         AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:stringToSpeak];
         [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"]];
         [utterance setRate:.5];
-        [synthesizer speakUtterance:utterance];
+        [self.synthesizer speakUtterance:utterance];
     }
     else if ([recognitionLanguage isEqualToString:@"French"]) {
         //Speak in French
-        synthesizer = [[AVSpeechSynthesizer alloc]init];
-        [synthesizer setDelegate:self];
         AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a "];
         [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"]];
         [utterance setRate:.5];
-        [synthesizer speakUtterance:utterance];
+        [self.synthesizer speakUtterance:utterance];
     }
     else if ([recognitionLanguage isEqualToString:@"Spanish"]) {
         //Speak in Spanish
-        synthesizer = [[AVSpeechSynthesizer alloc]init];
-        [synthesizer setDelegate:self];
         AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a "];
         [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"]];
         [utterance setRate:.5];
-        [synthesizer speakUtterance:utterance];
+        [self.synthesizer speakUtterance:utterance];
     }
     else if ([recognitionLanguage isEqualToString:@"Russian"]) {
         //Speak in Russian
-        synthesizer = [[AVSpeechSynthesizer alloc]init];
-        [synthesizer setDelegate:self];
         AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a "];
         [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"]];
         [utterance setRate:.5];
-        [synthesizer speakUtterance:utterance];
+        [self.synthesizer speakUtterance:utterance];
     }
     else if ([recognitionLanguage isEqualToString:@"German"]) {
         //Speak in German
-        synthesizer = [[AVSpeechSynthesizer alloc]init];
-        [synthesizer setDelegate:self];
         AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a "];
         [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"]];
         [utterance setRate:.5];
-        [synthesizer speakUtterance:utterance];
+        [self.synthesizer speakUtterance:utterance];
     }
     else if ([recognitionLanguage isEqualToString:@"Mandarin"]) {
         //Speak in Mandarin
-        synthesizer = [[AVSpeechSynthesizer alloc]init];
-        [synthesizer setDelegate:self];
         AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a "];
         [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"]];
         [utterance setRate:.5];
-        [synthesizer speakUtterance:utterance];
+        [self.synthesizer speakUtterance:utterance];
     }
     else if ([recognitionLanguage isEqualToString:@"Italian"]) {
         //Speak in Italian
-        synthesizer = [[AVSpeechSynthesizer alloc]init];
-        [synthesizer setDelegate:self];
         AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:@"You are looking at a "];
         [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"]];
         [utterance setRate:.5];
-        [synthesizer speakUtterance:utterance];
+        [self.synthesizer speakUtterance:utterance];
     }
 }
 
@@ -485,6 +527,8 @@
     //Grab still frame from video stream and store it as a UIImage
     
     // Not deprecated code that makes the app crash.
+    
+    // A loop with a purpose that is unknown.
     /* AVCaptureConnection *videoConnection = nil;
     for (AVCaptureConnection *connection in photoOutput.connections)
     {
@@ -497,13 +541,19 @@
             }
         }
         if (videoConnection) { break; }
-    }
+    } */
     
     NSLog(@"about to request a capture from: %@", photoOutput);
     
-    AVCapturePhotoSettings *settings = [AVCapturePhotoSettings photoSettingsWithFormat:[[NSDictionary alloc] initWithObjectsAndKeys:AVVideoCodecTypeJPEG, AVVideoCodecKey, nil]];
+    AVCapturePhotoSettings *settings;
+    if ([photoOutput.availablePhotoCodecTypes containsObject:AVVideoCodecTypeJPEG]) {
+        settings = [AVCapturePhotoSettings photoSettingsWithFormat:@{AVVideoCodecKey: AVVideoCodecTypeJPEG}];
+    } else {
+        settings = [[AVCapturePhotoSettings alloc] init];
+    }
+    settings.flashMode = AVCaptureFlashModeAuto;
     
-    [photoOutput capturePhotoWithSettings:settings delegate:self]; */
+    [photoOutput capturePhotoWithSettings:settings delegate:self];
     
     // Deprecated code
     /*
@@ -526,15 +576,29 @@
      }]; */
 }
 
+#pragma mark - Photo output delegate
+
 - (void)captureOutput:(AVCapturePhotoOutput *)output didFinishProcessingPhoto:(AVCapturePhoto *)photo error:(NSError *)error {
-    NSData *imageData = photo.fileDataRepresentation;
-    UIImage *image = [UIImage imageWithData:imageData];
+    if (!error) {
+        NSData *imageData = photo.fileDataRepresentation;
+        UIImage *image = [UIImage imageWithData:imageData];
+        
+        self.vImage.image = image;
+        
+        /* dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            [self runNeuralNet];
+        }); */
+    }
     
-    self.vImage.image = image;
     
-    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-        [self runNeuralNet];
-    });
+    /* UIGraphicsBeginImageContextWithOptions(CGSizeMake(299, 299), YES, 2.0);
+    [image drawInRect:CGRectMake(0, 0, 299, 299)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    self.vImage.image = newImage; */
+    
+    
 }
 
 - (void)beginNativeSpeechRecognition {
@@ -577,7 +641,6 @@
     isRecognizing = YES;
     NSLog(@"Recognized text: %@", recognizedText);
     
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     if ([recognizedText containsString:@"in French"]) {
         recognitionLanguage = @"French";
         

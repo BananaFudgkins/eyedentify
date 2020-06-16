@@ -18,9 +18,13 @@
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
 #import <Speech/Speech.h>
+#import <GoogleMobileAds/GoogleMobileAds.h>
+#import <Vision/Vision.h>
+#import <CoreML/CoreML.h>
+
 #import "FGTranslator.h"
 #import "AFNetworking.h"
-#import "KVNProgress.h"
+#import "MobileNetV2.h"
 
 @interface ViewController : UIViewController <AVSpeechSynthesizerDelegate, AVCapturePhotoCaptureDelegate, UIGestureRecognizerDelegate, SFSpeechRecognizerDelegate, SFSpeechRecognitionTaskDelegate> {
 }
@@ -30,14 +34,17 @@
 
 @property (nonatomic) BOOL shouldRevert;
 @property (strong, nonatomic) NSTimer *silenceTimer;
+@property (strong, nonatomic) AVSpeechSynthesizer *synthesizer;
 
 @property (strong, nonatomic) IBOutlet UILabel *recognizedObjectLabel;
 @property (strong, nonatomic) IBOutlet UILabel *noCameraLabel;
+@property (strong, nonatomic) IBOutlet GADBannerView *adBannerView;
 
 @property (strong, nonatomic) SFSpeechRecognizer *recognizer;
 @property (strong, nonatomic) SFSpeechAudioBufferRecognitionRequest *request;
 @property (strong, nonatomic) SFSpeechRecognitionTask *recognitionTask;
 @property (strong, nonatomic) AVAudioEngine *audioEngine;
+@property (strong, nonatomic) VNCoreMLRequest *classificationRequest;
 
 @end
 

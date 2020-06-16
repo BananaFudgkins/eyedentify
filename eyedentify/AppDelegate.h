@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <GoogleMobileAds/GoogleMobileAds.h>
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

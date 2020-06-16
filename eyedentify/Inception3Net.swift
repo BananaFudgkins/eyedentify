@@ -89,6 +89,7 @@ let textureFormat = MPSImageFeatureChannelFormat.float16
     
     
     
+    
     /**
          This function encodes all the layers of the network into given commandBuffer,
          it calls subroutines for each piece of the network
@@ -1065,7 +1066,8 @@ let textureFormat = MPSImageFeatureChannelFormat.float16
         // In this sample code, the aggregate benefit of the use of MPSTemporaryImages
         // is to reduce the area of memory allocated to 1/4 and save about 3 ms of CPU
         // time.
-        MPSTemporaryImage.prefetchStorage(with: commandBuffer, imageDescriptorList: [sid, inid, m0id, m1id, m2id, m3id, m4id, m5id, m6id, m7id, m8id, m9id, m10id])
+        
+        /* MPSTemporaryImage.prefetchStorage(with: commandBuffer, imageDescriptorList: [sid, inid, m0id, m1id, m2id, m3id, m4id, m5id, m6id, m7id, m8id, m9id, m10id]) */
         
         // we use preImage to hold preprocesing intermediate results
         preImage = MPSTemporaryImage(commandBuffer: commandBuffer, imageDescriptor: sid)
