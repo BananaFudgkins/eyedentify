@@ -67,11 +67,12 @@
         previewLayer.frame = CGRectMake(0,
                                         0,
                                         self.view.bounds.size.width,
-                                        self.view.bounds.size.height);
-        [self.view.layer insertSublayer:previewLayer atIndex:0];
+                                        self.view.bounds.size.height - self.adBannerView.bounds.size.height);
         
         [captureSession commitConfiguration];
         [captureSession startRunning];
+        
+        [self.view.layer insertSublayer:previewLayer atIndex:0];
     } else {
         self.noCameraLabel.hidden = NO;
     }
@@ -102,7 +103,9 @@
     MobileNetV2 *mobileNet = [[MobileNetV2 alloc] init];
     VNCoreMLModel *model = [VNCoreMLModel modelForMLModel:mobileNet.model error:nil];
     self.classificationRequest = [[VNCoreMLRequest alloc] initWithModel:model completionHandler:^(VNRequest * _Nonnull request, NSError * _Nullable error) {
-        [self processClassificationsForRequest:request error:error];
+        if (!error) {
+            [self processClassificationsForRequest:request error:error];
+        }
     }];
     
     self.vImage = [[UIImageView alloc] init];
@@ -153,19 +156,21 @@
 - (void)handleTap:(UITapGestureRecognizer *)recognizer {
     NSLog(@"The screen was tapped");
     
-    [inputNode removeTapOnBus:0];
-    [_recognitionTask cancel];
-    _recognitionTask = nil;
+    /* [inputNode removeTapOnBus:0];
+    [self.recognitionTask cancel];
+    self.recognitionTask = nil; */
     
     isRecognizing = YES;
     touchesActive = YES;
      
     group = dispatch_group_create();
-    [self grabFrameFromVideo];
     dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        [self grabFrameFromVideo];
+    });
+    /* dispatch_group_notify(group, dispatch_get_main_queue(), ^{
         //Grab still frame from video and run neural net once that completes
         [self runNeuralNet];
-    });
+    }); */
 }
 
 - (void)handlePinchToZoomRecognizer:(UIPinchGestureRecognizer *)pinchRecognizer {
@@ -221,10 +226,9 @@
 
 #pragma mark - Speech synthesizer delegate
 
-/* - (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer willSpeakRangeOfSpeechString:(NSRange)characterRange utterance:(AVSpeechUtterance *)utterance {
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+- (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer willSpeakRangeOfSpeechString:(NSRange)characterRange utterance:(AVSpeechUtterance *)utterance {
     [[AVAudioSession sharedInstance] setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
-} */
+}
 
 - (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didStartSpeechUtterance:(AVSpeechUtterance *)utterance {
     //[KVNProgress dismiss];
@@ -364,7 +368,13 @@
             if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusNotDetermined) {
                 [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
                     if (status == SFSpeechRecognizerAuthorizationStatusAuthorized) {
-                        [self beginNativeSpeechRecognition];
+                        if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionGranted) {
+                            [self performSelector:@selector(beginNativeSpeechRecognition) withObject:nil afterDelay:0.01];
+                        } else if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionUndetermined) {
+                            AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"We also need access to your device's microphone. Please grant it now."];
+                            utterance.rate = 0.5;
+                            [self.synthesizer speakUtterance:utterance];
+                        }
                     }
                 }];
             }
@@ -381,13 +391,30 @@
             [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
                 if (status == SFSpeechRecognizerAuthorizationStatusAuthorized) {
                     // isRecognizing = YES;
-                    AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:@"Thank you for granting access to speech recognition. After the vibration, please say a command or tap the screen."];
-                    [self.synthesizer speakUtterance:utterance];
-                    [self beginNativeSpeechRecognition];
+                    if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionGranted) {
+                        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:@"Thank you for granting access to speech recognition. After the vibration, please say a command or tap the screen."];
+                        [self.synthesizer speakUtterance:utterance];
+                        [self performSelector:@selector(beginNativeSpeechRecognition) withObject:nil afterDelay:0.01];
+                    } else if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionUndetermined) {
+                        AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"We also need access to your device's microphone. Please grant it now."];
+                        utterance.rate = 0.5;
+                        [self.synthesizer speakUtterance:utterance];
+                    }
                 }
             }];
         } else if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusAuthorized) {
-            [self beginNativeSpeechRecognition];
+            if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionGranted) {
+                [self performSelector:@selector(beginNativeSpeechRecognition) withObject:nil afterDelay:0.01];
+            } else if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionUndetermined) {
+                NSLog(@"Asking for access to the microphone...");
+                [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
+                    if (granted) {
+                        AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Thank you for granting access to your device's microphone. After the vibration, please say a command or tap the screen."];
+                        utterance.rate = 0.5;
+                        [self.synthesizer speakUtterance:utterance];
+                    }
+                }];
+            }
         }
     }
 }
@@ -397,20 +424,20 @@
 }
 
 - (void)runNeuralNet {
-    NSLog(@"Classifying...");
     struct CGImage *cgImg = [self.vImage.image CGImage];
     
     VNImageRequestHandler *handler = [[VNImageRequestHandler alloc] initWithCGImage:cgImg options:nil];
     NSError *error;
     
     @try {
+        NSLog(@"Putting out a request to the neural net...");
         [handler performRequests:@[self.classificationRequest] error:&error];
     } @catch (NSException *exception) {
         NSLog(@"Unable to classify image: %@", error.localizedDescription);
     } @finally {
         [inputNode removeTapOnBus:0];
-        [_recognitionTask cancel];
-        _recognitionTask = nil;
+        [self.recognitionTask cancel];
+        self.recognitionTask = nil;
     }
 }
 
@@ -451,6 +478,7 @@
         [self speakResults];
     } */
     
+    NSLog(@"Processing neural net results...");
     if (request.results) {
         NSArray<VNClassificationObservation *> *classifications = request.results;
         if (classifications.count == 0) {
@@ -458,8 +486,13 @@
         } else {
             VNClassificationObservation *top = classifications[0];
             neuralNetworkResult = top.identifier;
+            NSLog(@"Result: %@", top.identifier);
+            
             [self speakResults];
         }
+    } else {
+        NSLog(@"Unable to classify image %@", error.localizedDescription);
+        return;
     }
 }
 
@@ -588,6 +621,8 @@
         
         self.vImage.image = image;
         
+        [self runNeuralNet];
+        
         /* dispatch_group_notify(group, dispatch_get_main_queue(), ^{
             [self runNeuralNet];
         }); */
@@ -658,88 +693,79 @@
         recognitionLanguage = @"French";
         
         group = dispatch_group_create();
-        [self grabFrameFromVideo];
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
             //Grab still frame from video and run neural net once that completes
-            [self runNeuralNet];
+            [self grabFrameFromVideo];
         });
     }
     else if ([recognizedText containsString:@"in Spanish"]) {
         recognitionLanguage = @"Spanish";
         
         group = dispatch_group_create();
-        [self grabFrameFromVideo];
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
             //Grab still frame from video and run neural net once that completes
-            [self runNeuralNet];
+            [self grabFrameFromVideo];
         });
     }
     else if ([recognizedText containsString:@"in Russian"]) {
         recognitionLanguage = @"Russian";
         
         group = dispatch_group_create();
-        [self grabFrameFromVideo];
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
             //Grab still frame from video and run neural net once that completes
-            [self runNeuralNet];
+            [self grabFrameFromVideo];
         });
     }
     else if ([recognizedText containsString:@"in English"]) {
         recognitionLanguage = @"English";
         
         group = dispatch_group_create();
-        [self grabFrameFromVideo];
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
             //Grab still frame from video and run neural net once that completes
-            [self runNeuralNet];
+            [self grabFrameFromVideo];
         });
     }
     else if ([recognizedText containsString:@"in German"]) {
         recognitionLanguage = @"German";
         
         group = dispatch_group_create();
-        [self grabFrameFromVideo];
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
             //Grab still frame from video and run neural net once that completes
-            [self runNeuralNet];
+            [self grabFrameFromVideo];
         });
     }
     else if ([recognizedText containsString:@"in Mandarin"]) {
         recognitionLanguage = @"Mandarin";
         
         group = dispatch_group_create();
-        [self grabFrameFromVideo];
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
             //Grab still frame from video and run neural net once that completes
-            [self runNeuralNet];
+            [self grabFrameFromVideo];
         });
     }
     else if ([recognizedText containsString:@"in Italian"]) {
         recognitionLanguage = @"Italian";
         
         group = dispatch_group_create();
-        [self grabFrameFromVideo];
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
             //Grab still frame from video and run neural net once that completes
-            [self runNeuralNet];
+            [self grabFrameFromVideo];
         });
     }
     else if ([recognizedText containsString:@"am I looking at now"] || [recognizedText containsString:@"what is this now"] || [recognizedText containsString:@"what about now"] || [recognizedText containsString:@"And now"]) {
         
         group = dispatch_group_create();
-        [self grabFrameFromVideo];
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
             //Grab still frame from video and run neural net once that completes
-            [self runNeuralNet];
+            [self grabFrameFromVideo];
         });
     }
     else if ([recognizedText containsString:@"am I looking at"] || [recognizedText containsString:@"what is this"]) {
         
         group = dispatch_group_create();
-        [self grabFrameFromVideo];
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
             //Grab still frame from video and run neural net once that completes
-            [self runNeuralNet];
+            [self grabFrameFromVideo];
         });
     }
     else {
