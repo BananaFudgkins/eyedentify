@@ -101,8 +101,8 @@
     
     ciContext = [CIContext contextWithMTLDevice:device]; */
     
-    MobileNetV2 *mobileNet = [[MobileNetV2 alloc] init];
-    VNCoreMLModel *model = [VNCoreMLModel modelForMLModel:mobileNet.model error:nil];
+    SqueezeNet *squeezeNet = [[SqueezeNet alloc] init];
+    VNCoreMLModel *model = [VNCoreMLModel modelForMLModel:squeezeNet.model error:nil];
     self.classificationRequest = [[VNCoreMLRequest alloc] initWithModel:model completionHandler:^(VNRequest * _Nonnull request, NSError * _Nullable error) {
         if (!error) {
             [self processClassificationsForRequest:request error:error];
@@ -125,22 +125,32 @@
     self.synthesizer.delegate = self;
     
     if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusAuthorized) {
-        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:@"Welcome to eyedentify.  After the vibration, please say a command or tap the screen ."];
-        [utterance setRate:.5];
-        [self.synthesizer speakUtterance:utterance];
+        if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionGranted) {
+            AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:@"Welcome to eyedentify.  After the vibration, please say a command or tap the screen ."];
+            [utterance setRate:.5];
+            [self.synthesizer speakUtterance:utterance];
+            
+            tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+            tapGestureRecognizer.delegate = self;
+            [self.view addGestureRecognizer:tapGestureRecognizer];
+            
+            pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchToZoomRecognizer:)];
+            [self.view addGestureRecognizer:pinchRecognizer];
+            
+            touchesActive = NO;
+            
+            isRecording = NO;
+        } else if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionUndetermined) {
+            AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Welcome to eyedentify. Before you can begin using the app, please grant access to your device's microphone."];
+            utterance.rate = 0.5;
+            
+            [self.synthesizer speakUtterance:utterance];
+            
+            touchesActive = NO;
+            
+            isRecording = NO;
+        }
         
-        tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-        tapGestureRecognizer.delegate = self;
-        [self.view addGestureRecognizer:tapGestureRecognizer];
-        
-        pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchToZoomRecognizer:)];
-        [self.view addGestureRecognizer:pinchRecognizer];
-        
-        [self.view addSubview:self.recognizedObjectLabel];
-        
-        touchesActive = NO;
-        
-        isRecording = NO;
     } else if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusNotDetermined) {
         AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:@"Welcome to eyedentify. Before you can begin using the app, please grant access to speech recognition."];
         [utterance setRate:0.5];
@@ -533,7 +543,7 @@
                     if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionGranted) {
                         AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:@"Thank you for granting access to speech recognition. After the vibration, please say a command or tap the screen."];
                         [self.synthesizer speakUtterance:utterance];
-                        [self performSelector:@selector(beginNativeSpeechRecognition) withObject:nil afterDelay:0.01];
+                        // [self performSelector:@selector(beginNativeSpeechRecognition) withObject:nil afterDelay:0.01];
                     } else if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionUndetermined) {
                         AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"We also need access to your device's microphone. Please grant it now."];
                         utterance.rate = 0.5;
@@ -543,6 +553,7 @@
             }];
         } else if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusAuthorized) {
             if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionGranted) {
+                NSLog(@"Access to both the microphone and speech recognition has been granted.");
                 [self performSelector:@selector(beginNativeSpeechRecognition) withObject:nil afterDelay:0.01];
             } else if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionUndetermined) {
                 NSLog(@"Asking for access to the microphone...");
@@ -551,6 +562,15 @@
                         AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Thank you for granting access to your device's microphone. After the vibration, please say a command or tap the screen."];
                         utterance.rate = 0.5;
                         [self.synthesizer speakUtterance:utterance];
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+                            tapGestureRecognizer.delegate = self;
+                            [self.view addGestureRecognizer:tapGestureRecognizer];
+                            
+                            pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchToZoomRecognizer:)];
+                            [self.view addGestureRecognizer:pinchRecognizer];
+                        });
                     }
                 }];
             }

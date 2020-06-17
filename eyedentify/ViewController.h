@@ -22,7 +22,7 @@
 #import <CoreML/CoreML.h>
 #import <MLKitTranslate/MLKitTranslate.h>
 
-#import "MobileNetV2.h"
+#import "SqueezeNet.h"
 #import "Reachability.h"
 
 @interface ViewController : UIViewController <AVSpeechSynthesizerDelegate, AVCapturePhotoCaptureDelegate, UIGestureRecognizerDelegate, SFSpeechRecognizerDelegate, SFSpeechRecognitionTaskDelegate> {

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		005DC77D2499537700007D73 /* MobileNetV2.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 005DC77C2499537600007D73 /* MobileNetV2.mlmodel */; };
+		00445A8A249ABC42000AF0DB /* SqueezeNet.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 00445A89249ABC42000AF0DB /* SqueezeNet.mlmodel */; };
 		005DC77F2499539F00007D73 /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 005DC77E2499539F00007D73 /* Vision.framework */; };
 		005DC781249953B900007D73 /* CoreML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 005DC780249953B900007D73 /* CoreML.framework */; };
 		00C18173249AA2BB00070E8C /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 00C18172249AA2BB00070E8C /* Reachability.m */; };
@@ -31,11 +31,6 @@
 		ACC1F3511E2B2E6800515DBF /* MetalPerformanceShaders.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACC1F3501E2B2E6800515DBF /* MetalPerformanceShaders.framework */; };
 		ACC1F3531E2B2E6B00515DBF /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACC1F3521E2B2E6B00515DBF /* MetalKit.framework */; };
 		ACC1F3551E2B2E6E00515DBF /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACC1F3541E2B2E6E00515DBF /* Metal.framework */; };
-		ACC1F5311E2B534700515DBF /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = ACC1F50F1E2B534700515DBF /* LICENSE.txt */; };
-		ACC1F5321E2B534700515DBF /* PINCache.m in Sources */ = {isa = PBXBuildFile; fileRef = ACC1F5131E2B534700515DBF /* PINCache.m */; };
-		ACC1F5331E2B534700515DBF /* PINDiskCache.m in Sources */ = {isa = PBXBuildFile; fileRef = ACC1F5151E2B534700515DBF /* PINDiskCache.m */; };
-		ACC1F5341E2B534700515DBF /* PINMemoryCache.m in Sources */ = {isa = PBXBuildFile; fileRef = ACC1F5171E2B534700515DBF /* PINMemoryCache.m */; };
-		ACC1F5351E2B534700515DBF /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = ACC1F5181E2B534700515DBF /* README.md */; };
 		B50CCE6D3F92C7496FDFE8D0 /* Pods_eyedentify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 129DD198B37804ACC9166D96 /* Pods_eyedentify.framework */; };
 		E6D89FCD7C2FC0116B769B11 /* Pods_eyedentifyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2025B6BEBC3116A4396873C3 /* Pods_eyedentifyTests.framework */; };
 /* End PBXBuildFile section */
@@ -58,7 +53,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		005DC77C2499537600007D73 /* MobileNetV2.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = MobileNetV2.mlmodel; sourceTree = "<group>"; };
+		00445A89249ABC42000AF0DB /* SqueezeNet.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = SqueezeNet.mlmodel; sourceTree = "<group>"; };
 		005DC77E2499539F00007D73 /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
 		005DC780249953B900007D73 /* CoreML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreML.framework; path = System/Library/Frameworks/CoreML.framework; sourceTree = SDKROOT; };
 		00C18171249AA2BA00070E8C /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -98,15 +93,6 @@
 		ACC1F3501E2B2E6800515DBF /* MetalPerformanceShaders.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalPerformanceShaders.framework; path = System/Library/Frameworks/MetalPerformanceShaders.framework; sourceTree = SDKROOT; };
 		ACC1F3521E2B2E6B00515DBF /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		ACC1F3541E2B2E6E00515DBF /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
-		ACC1F50F1E2B534700515DBF /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
-		ACC1F5111E2B534700515DBF /* Nullability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Nullability.h; sourceTree = "<group>"; };
-		ACC1F5121E2B534700515DBF /* PINCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PINCache.h; sourceTree = "<group>"; };
-		ACC1F5131E2B534700515DBF /* PINCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PINCache.m; sourceTree = "<group>"; };
-		ACC1F5141E2B534700515DBF /* PINDiskCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PINDiskCache.h; sourceTree = "<group>"; };
-		ACC1F5151E2B534700515DBF /* PINDiskCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PINDiskCache.m; sourceTree = "<group>"; };
-		ACC1F5161E2B534700515DBF /* PINMemoryCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PINMemoryCache.h; sourceTree = "<group>"; };
-		ACC1F5171E2B534700515DBF /* PINMemoryCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PINMemoryCache.m; sourceTree = "<group>"; };
-		ACC1F5181E2B534700515DBF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		CF168A6EAE450A1496BDF898 /* Pods-eyedentifyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-eyedentifyTests.debug.xcconfig"; path = "Target Support Files/Pods-eyedentifyTests/Pods-eyedentifyTests.debug.xcconfig"; sourceTree = "<group>"; };
 		D46D838BA8A25A38336A8251 /* Pods-eyedentifyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-eyedentifyTests.release.xcconfig"; path = "Target Support Files/Pods-eyedentifyTests/Pods-eyedentifyTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -154,7 +140,7 @@
 		005DC77B2499536A00007D73 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				005DC77C2499537600007D73 /* MobileNetV2.mlmodel */,
+				00445A89249ABC42000AF0DB /* SqueezeNet.mlmodel */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -184,7 +170,6 @@
 		AC22EC0C1E2AF0D0003433D1 = {
 			isa = PBXGroup;
 			children = (
-				ACC1F50E1E2B534700515DBF /* PINCache */,
 				AC22EC171E2AF0D0003433D1 /* eyedentify */,
 				AC22EC311E2AF0D0003433D1 /* eyedentifyTests */,
 				AC22EC3C1E2AF0D0003433D1 /* eyedentifyUITests */,
@@ -270,31 +255,6 @@
 				2025B6BEBC3116A4396873C3 /* Pods_eyedentifyTests.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		ACC1F50E1E2B534700515DBF /* PINCache */ = {
-			isa = PBXGroup;
-			children = (
-				ACC1F50F1E2B534700515DBF /* LICENSE.txt */,
-				ACC1F5101E2B534700515DBF /* PINCache */,
-				ACC1F5181E2B534700515DBF /* README.md */,
-			);
-			name = PINCache;
-			path = eyedentify/network_params/PINCache;
-			sourceTree = "<group>";
-		};
-		ACC1F5101E2B534700515DBF /* PINCache */ = {
-			isa = PBXGroup;
-			children = (
-				ACC1F5111E2B534700515DBF /* Nullability.h */,
-				ACC1F5121E2B534700515DBF /* PINCache.h */,
-				ACC1F5131E2B534700515DBF /* PINCache.m */,
-				ACC1F5141E2B534700515DBF /* PINDiskCache.h */,
-				ACC1F5151E2B534700515DBF /* PINDiskCache.m */,
-				ACC1F5161E2B534700515DBF /* PINMemoryCache.h */,
-				ACC1F5171E2B534700515DBF /* PINMemoryCache.m */,
-			);
-			path = PINCache;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -415,7 +375,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ACC1F5311E2B534700515DBF /* LICENSE.txt in Resources */,
 				AC22EC281E2AF0D0003433D1 /* LaunchScreen.storyboard in Resources */,
 				AC22EC251E2AF0D0003433D1 /* Assets.xcassets in Resources */,
 				AC22EC231E2AF0D0003433D1 /* Main.storyboard in Resources */,
@@ -582,14 +541,10 @@
 			files = (
 				AC22EC201E2AF0D0003433D1 /* ViewController.m in Sources */,
 				AC22EC1D1E2AF0D0003433D1 /* AppDelegate.m in Sources */,
-				ACC1F5331E2B534700515DBF /* PINDiskCache.m in Sources */,
-				ACC1F5351E2B534700515DBF /* README.md in Sources */,
 				00C18173249AA2BB00070E8C /* Reachability.m in Sources */,
-				005DC77D2499537700007D73 /* MobileNetV2.mlmodel in Sources */,
+				00445A8A249ABC42000AF0DB /* SqueezeNet.mlmodel in Sources */,
 				AC22EC1A1E2AF0D0003433D1 /* main.m in Sources */,
 				AC7E5E741E2AF15800EAFCA5 /* OverlayViewController.m in Sources */,
-				ACC1F5321E2B534700515DBF /* PINCache.m in Sources */,
-				ACC1F5341E2B534700515DBF /* PINMemoryCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -737,7 +692,7 @@
 			baseConfigurationReference = 0A36716D356D97794712D936 /* Pods-eyedentify.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 85Q84CPFAN;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -763,7 +718,7 @@
 			baseConfigurationReference = 75D15AEDA8381A48ABB125C9 /* Pods-eyedentify.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 85Q84CPFAN;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
