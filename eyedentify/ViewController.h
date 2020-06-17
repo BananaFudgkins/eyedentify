@@ -20,10 +20,10 @@
 #import <GoogleMobileAds/GoogleMobileAds.h>
 #import <Vision/Vision.h>
 #import <CoreML/CoreML.h>
+#import <MLKitTranslate/MLKitTranslate.h>
 
-#import "FGTranslator.h"
-#import "AFNetworking.h"
 #import "MobileNetV2.h"
+#import "Reachability.h"
 
 @interface ViewController : UIViewController <AVSpeechSynthesizerDelegate, AVCapturePhotoCaptureDelegate, UIGestureRecognizerDelegate, SFSpeechRecognizerDelegate, SFSpeechRecognitionTaskDelegate> {
 }
@@ -45,6 +45,8 @@
 @property (strong, nonatomic) SFSpeechRecognitionTask *recognitionTask;
 @property (strong, nonatomic) AVAudioEngine *audioEngine;
 @property (strong, nonatomic) VNCoreMLRequest *classificationRequest;
+@property (strong, nonatomic) Reachability *reachability;
+@property (strong, nonatomic) MLKModelManager *mlModelManager;
 
 @end
 

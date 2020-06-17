@@ -78,6 +78,7 @@
     }
     
     self.audioEngine = [[AVAudioEngine alloc] init];
+    self.mlModelManager = [MLKModelManager modelManager];
     
     // Do any additional setup after loading the view, typically from a nib.
     
@@ -109,6 +110,9 @@
     }];
     
     self.vImage = [[UIImageView alloc] init];
+    
+    self.reachability = [Reachability reachabilityForInternetConnection];
+    [self.reachability startNotifier];
     
     recognitionLanguage = @"English";
     self.recognizer = [[SFSpeechRecognizer alloc] initWithLocale:[NSLocale localeWithLocaleIdentifier:@"en_US"]];
@@ -239,7 +243,7 @@
     
     if (isRecognizing == YES) {
         
-        if ([recognitionLanguage isEqualToString:@"French"]) {
+        /* if ([recognitionLanguage isEqualToString:@"French"]) {
             //Translate to French
             //Speak in French
             FGTranslator *translator =
@@ -359,6 +363,141 @@
                 NSTimer *timer;
                 timer = [NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(hideLabel) userInfo:nil repeats:NO];
             }];
+        } */
+        if ([recognitionLanguage isEqualToString:@"French"]) {
+            MLKTranslatorOptions *options = [[MLKTranslatorOptions alloc] initWithSourceLanguage:MLKTranslateLanguageEnglish
+                                                                                  targetLanguage:MLKTranslateLanguageFrench];
+            MLKTranslator *translator = [MLKTranslator translatorWithOptions:options];
+            
+            if (self.reachability.currentReachabilityStatus == ReachableViaWiFi) {
+                MLKModelDownloadConditions *conditions = [[MLKModelDownloadConditions alloc] initWithAllowsCellularAccess:NO
+                                                                                              allowsBackgroundDownloading:YES];
+                [translator downloadModelIfNeededWithConditions:conditions completion:^(NSError * _Nullable error) {
+                    if (!error) {
+                        [translator translateText:neuralNetworkResult completion:^(NSString * _Nullable result, NSError * _Nullable error) {
+                            if (result) {
+                                AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:result];
+                                utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"fr-FR"];
+                                utterance.rate = 0.5;
+                                
+                                [self.synthesizer speakUtterance:utterance];
+                                
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    self.recognizedObjectLabel.text = result;
+                                    self.recognizedObjectLabel.hidden = NO;
+                                });
+                                
+                                NSTimer *timer;
+                                timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(hideLabel) userInfo:nil repeats:NO];
+                            }
+                        }];
+                    } else {
+                        AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Something went wrong when trying to download translations. Please check your internet connection and try again."];
+                        utterance.rate = 0.5;
+                        
+                        [self.synthesizer speakUtterance:utterance];
+                    }
+                }];
+            } else if (self.reachability.currentReachabilityStatus == ReachableViaWWAN) {
+                if ([self.mlModelManager.downloadedTranslateModels containsObject:[MLKTranslateRemoteModel translateRemoteModelWithLanguage:MLKTranslateLanguageFrench]]) {
+                    [translator translateText:neuralNetworkResult completion:^(NSString * _Nullable result, NSError * _Nullable error) {
+                        if (result) {
+                            AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:result];
+                            utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"fr-FR"];
+                            utterance.rate = 0.5;
+                            
+                            [self.synthesizer speakUtterance:utterance];
+                            
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                self.recognizedObjectLabel.text = result;
+                                self.recognizedObjectLabel.hidden = NO;
+                            });
+                            
+                            NSTimer *timer;
+                            timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(hideLabel) userInfo:nil repeats:NO];
+                        }
+                    }];
+                } else {
+                    AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Please connect to WiFi to download translations and try again."];
+                    utterance.rate = 0.5;
+                    
+                    [self.synthesizer speakUtterance:utterance];
+                }
+            }
+            
+            // For now, just download the model. Hopefully the user can tolerate waiting for a bit longer.
+            
+        }
+        else if ([recognitionLanguage isEqualToString:@"Spanish"]) {
+            MLKTranslatorOptions *options = [[MLKTranslatorOptions alloc] initWithSourceLanguage:MLKTranslateLanguageEnglish
+                                                                                  targetLanguage:MLKTranslateLanguageSpanish];
+            MLKTranslator *translator = [MLKTranslator translatorWithOptions:options];
+            
+            if (self.reachability.currentReachabilityStatus == ReachableViaWiFi) {
+                MLKModelDownloadConditions *conditions = [[MLKModelDownloadConditions alloc] initWithAllowsCellularAccess:NO
+                                                                                              allowsBackgroundDownloading:YES];
+                [translator downloadModelIfNeededWithConditions:conditions completion:^(NSError * _Nullable error) {
+                    if (!error) {
+                        [translator translateText:neuralNetworkResult completion:^(NSString * _Nullable result, NSError * _Nullable error) {
+                            if (result) {
+                                AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:result];
+                                utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"es-ES"];
+                                utterance.rate = 0.5;
+                                
+                                [self.synthesizer speakUtterance:utterance];
+                                
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    self.recognizedObjectLabel.text = result;
+                                    self.recognizedObjectLabel.hidden = NO;
+                                });
+                                
+                                NSTimer *timer;
+                                timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(hideLabel) userInfo:nil repeats:NO];
+                            } else {
+                                AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Something went wrong when trying to translate. Please try again."];
+                                utterance.rate = 0.5;
+                                
+                                [self.synthesizer speakUtterance:utterance];
+                            }
+                        }];
+                    } else {
+                        AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Something went wrong when trying to download translations. Please check your internet connection and try again."];
+                        utterance.rate = 0.5;
+                        
+                        [self.synthesizer speakUtterance:utterance];
+                    }
+                }];
+            } else if (self.reachability.currentReachabilityStatus == ReachableViaWWAN) {
+                if ([self.mlModelManager.downloadedTranslateModels containsObject:[MLKTranslateRemoteModel translateRemoteModelWithLanguage:MLKTranslateLanguageSpanish]]) {
+                    [translator translateText:neuralNetworkResult completion:^(NSString * _Nullable result, NSError * _Nullable error) {
+                        if (result) {
+                            AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:result];
+                            utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"es-ES"];
+                            utterance.rate = 0.5;
+                            
+                            [self.synthesizer speakUtterance:utterance];
+                            
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                self.recognizedObjectLabel.text = result;
+                                self.recognizedObjectLabel.hidden = NO;
+                            });
+                            
+                            NSTimer *timer;
+                            timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(hideLabel) userInfo:nil repeats:NO];
+                        } else {
+                            AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Something went wrong when trying to translate. Please try again."];
+                            utterance.rate = 0.5;
+                            
+                            [self.synthesizer speakUtterance:utterance];
+                        }
+                    }];
+                } else {
+                    AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Please connect to WiFi to download translations and try again."];
+                    utterance.rate = 0.5;
+                    
+                    [self.synthesizer speakUtterance:utterance];
+                }
+            }
         }
         else if ([recognitionLanguage isEqualToString:@"English"]) {
             AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
@@ -494,6 +633,13 @@
 
 - (void)speakResults {
     //speak results
+    
+    isRecording = NO;
+    [self.audioEngine stop];
+    [inputNode removeTapOnBus:0];
+    
+    self.request = nil;
+    self.recognitionTask = nil;
     
     if ([recognitionLanguage isEqualToString:@"English"]) {
         //Speak in English
@@ -674,25 +820,19 @@
     
     [self.audioEngine prepare];
     
-    [self.audioEngine startAndReturnError:nil];
+    NSError *error;
+    [self.audioEngine startAndReturnError:&error];
     if (self.audioEngine.isRunning) {
         NSLog(@"Audio engine has been started.");
         isRecording = YES;
     } else {
-        NSLog(@"Audio engine failed to start.");
+        NSLog(@"Audio engine failed to start: %@", error.localizedDescription);
     }
 }
 
 - (void)processSpeech {
     isRecognizing = YES;
     NSLog(@"Recognized text: %@", recognizedText);
-    
-    isRecording = NO;
-    [self.audioEngine stop];
-    [inputNode removeTapOnBus:0];
-    
-    self.request = nil;
-    self.recognitionTask = nil;
     
     if ([recognizedText containsString:@"in French"]) {
         recognitionLanguage = @"French";
