@@ -365,7 +365,7 @@
             if (touchesActive == NO) {
                 NSLog(@"Begun for english");
             }
-            if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusNotDetermined) {
+            /* if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusNotDetermined) {
                 [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
                     if (status == SFSpeechRecognizerAuthorizationStatusAuthorized) {
                         if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionGranted) {
@@ -377,7 +377,7 @@
                         }
                     }
                 }];
-            }
+            } */
         }
         isRecognizing = NO;
         touchesActive = NO;
@@ -434,10 +434,6 @@
         [handler performRequests:@[self.classificationRequest] error:&error];
     } @catch (NSException *exception) {
         NSLog(@"Unable to classify image: %@", error.localizedDescription);
-    } @finally {
-        [inputNode removeTapOnBus:0];
-        [self.recognitionTask cancel];
-        self.recognitionTask = nil;
     }
 }
 
@@ -513,6 +509,8 @@
         AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:stringToSpeak];
         [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"]];
         [utterance setRate:.5];
+        
+        isRecognizing = NO;
         [self.synthesizer speakUtterance:utterance];
     }
     else if ([recognitionLanguage isEqualToString:@"French"]) {
@@ -688,6 +686,13 @@
 - (void)processSpeech {
     isRecognizing = YES;
     NSLog(@"Recognized text: %@", recognizedText);
+    
+    isRecording = NO;
+    [self.audioEngine stop];
+    [inputNode removeTapOnBus:0];
+    
+    self.request = nil;
+    self.recognitionTask = nil;
     
     if ([recognizedText containsString:@"in French"]) {
         recognitionLanguage = @"French";
