@@ -45,7 +45,7 @@
                                 <rect key="frame" x="37" y="292" width="246" height="212"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Try asking:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uZP-Ih-uB6">
-                                        <rect key="frame" x="62" y="70" width="122.5" height="29"/>
+                                        <rect key="frame" x="61.5" y="70" width="123" height="29"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                                         <color key="textColor" red="0.28627450980000002" green="0.69411764710000001" blue="0.96078431369999995" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
