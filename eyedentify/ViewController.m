@@ -60,10 +60,11 @@
         
         [captureSession addInput:cameraInput];
         
-        captureSession.sessionPreset = AVCaptureSessionPresetPhoto;
+        captureSession.sessionPreset = AVCaptureSessionPreset640x480;
         [captureSession addOutput:photoOutput];
         
         AVCaptureVideoPreviewLayer *previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:captureSession];
+        previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
         previewLayer.frame = CGRectMake(0,
                                         0,
                                         self.view.bounds.size.width,
@@ -238,6 +239,7 @@
     if (isRecording == NO){
         // If it is, prevent all of the delegate's gesture recognizers
         // from receiving the touch
+        NSLog(@"The screen should not be taking any more touches.");
         return NO;
     }
     return YES;
@@ -717,13 +719,6 @@
 - (void)speakResults {
     //speak results
     
-    isRecording = NO;
-    [self.audioEngine stop];
-    [inputNode removeTapOnBus:0];
-    
-    self.request = nil;
-    self.recognitionTask = nil;
-    
     if ([recognitionLanguage isEqualToString:@"English"]) {
         //Speak in English
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -816,6 +811,10 @@
     }
     settings.flashMode = AVCaptureFlashModeAuto;
     
+    isRecording = NO;
+    if (!isRecording) {
+        NSLog(@"The screen should not longer be receiving taps.");
+    }
     [photoOutput capturePhotoWithSettings:settings delegate:self];
     
     // Deprecated code
@@ -840,6 +839,20 @@
 }
 
 #pragma mark - Photo output delegate
+
+- (void)captureOutput:(AVCapturePhotoOutput *)output didCapturePhotoForResolvedSettings:(AVCaptureResolvedPhotoSettings *)resolvedSettings {
+    NSLog(@"Terminating speech recognition...");
+    
+    [self.audioEngine stop];
+    [inputNode removeTapOnBus:0];
+    
+    self.request = nil;
+    self.recognitionTask = nil;
+    
+    if (!self.audioEngine.isRunning) {
+        NSLog(@"The audio engine was stopped.");
+    }
+}
 
 - (void)captureOutput:(AVCapturePhotoOutput *)output didFinishProcessingPhoto:(AVCapturePhoto *)photo error:(NSError *)error {
     if (!error) {
