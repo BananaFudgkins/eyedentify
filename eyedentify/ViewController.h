@@ -47,6 +47,7 @@
 @property (strong, nonatomic) VNCoreMLRequest *classificationRequest;
 @property (strong, nonatomic) Reachability *reachability;
 @property (strong, nonatomic) MLKModelManager *mlModelManager;
+@property (strong, nonatomic) UIActivityIndicatorView *neuralNetActivityIndicator;
 
 @end
 

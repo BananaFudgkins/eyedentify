@@ -33,6 +33,8 @@
     UITapGestureRecognizer *tapGestureRecognizer;
     AVAudioInputNode *inputNode;
     BOOL isRecording;
+    
+    AVCaptureSession *captureSession;
 }
 
 @end
@@ -43,9 +45,26 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    //Initialize live camera preview
+    self.audioEngine = [[AVAudioEngine alloc] init];
+    self.mlModelManager = [MLKModelManager modelManager];
     
-    AVCaptureSession *captureSession = [[AVCaptureSession alloc] init];
+    self.neuralNetActivityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    self.neuralNetActivityIndicator.center = self.view.center;
+    self.neuralNetActivityIndicator.hidden = YES;
+    
+    // Do any additional setup after loading the view, typically from a nib.
+    
+#ifdef DEBUG
+    self.adBannerView.adUnitID = @"ca-app-pub-3940256099942544/2934735716"; // Unit ID is for debug. Change for release and vice versa.
+#else
+    self.adBannerView.adUnitID = @"ca-app-pub-4329905567201043/8988070404"; // Unit ID for release.
+#endif
+    
+    [self.adBannerView loadRequest:[GADRequest request]];
+}
+
+- (void)setupCameraPreview {
+    captureSession = [[AVCaptureSession alloc] init];
     [captureSession beginConfiguration];
     
     captureDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
@@ -74,22 +93,11 @@
         [captureSession startRunning];
         
         [self.view.layer insertSublayer:previewLayer atIndex:0];
+        [self.view addSubview:self.neuralNetActivityIndicator];
+        [self checkSpeechRecognitionPermission];
     } else {
         self.noCameraLabel.hidden = NO;
     }
-    
-    self.audioEngine = [[AVAudioEngine alloc] init];
-    self.mlModelManager = [MLKModelManager modelManager];
-    
-    // Do any additional setup after loading the view, typically from a nib.
-    
-#ifdef DEBUG
-    self.adBannerView.adUnitID = @"ca-app-pub-3940256099942544/2934735716"; // Unit ID is for debug. Change for release and vice versa.
-#else
-    self.adBannerView.adUnitID = @"ca-app-pub-4329905567201043/8988070404"; // Unit ID for release.
-#endif
-    
-    [self.adBannerView loadRequest:[GADRequest request]];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -130,6 +138,38 @@
     self.synthesizer = [[AVSpeechSynthesizer alloc] init];
     self.synthesizer.delegate = self;
     
+    //Initialize live camera preview
+    
+    if ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] == AVAuthorizationStatusAuthorized) {
+        [self setupCameraPreview];
+    } else if ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] == AVAuthorizationStatusNotDetermined) {
+        AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Welcome to Eyedentify. Before you can begin using the app, please grant access to your camera so you can take pictures of the objects around you."];
+        utterance.rate = 0.5;
+        
+        [self.synthesizer speakUtterance:utterance];
+        
+        touchesActive = NO;
+        
+        isRecording = NO;
+    } else if ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] == AVAuthorizationStatusDenied || [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] == AVAuthorizationStatusRestricted) {
+        AVSpeechSynthesizer *uhOhSynth = [[AVSpeechSynthesizer alloc] init];
+        AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Welcome to Eyedentify. You have denied or restricted access to your device's camera. You will not be able to use the app before you grant permission."];
+        utterance.rate = 0.5;
+        
+        [uhOhSynth speakUtterance:utterance];
+        
+        touchesActive = NO;
+        
+        isRecording = NO;
+    }
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)checkSpeechRecognitionPermission {
     if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusAuthorized) {
         if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionGranted) {
             AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:@"Welcome to eyedentify.  After the vibration, please say a command or tap the screen ."];
@@ -165,12 +205,14 @@
         touchesActive = NO;
         
         isRecording = NO;
+    } else if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusDenied || [SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusRestricted) {
+        AVSpeechSynthesizer *uhOhSynth = [[AVSpeechSynthesizer alloc] init];
+        AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"You have denied or restricted access to speech recognition. Please grant permission in Settings and try again."];
+        utterance.rate = 0.5;
+        
+        [uhOhSynth speakUtterance:utterance];
+        [captureSession stopRunning];
     }
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (void)handleTap:(UITapGestureRecognizer *)recognizer {
@@ -403,6 +445,7 @@
                                     utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"fr-FR"];
                                     utterance.rate = 0.5;
                                     
+                                    isRecognizing = NO;
                                     [self.synthesizer speakUtterance:utterance];
                                     
                                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -427,6 +470,7 @@
                             utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"fr-FR"];
                             utterance.rate = 0.5;
                             
+                            isRecognizing = NO;
                             [self.synthesizer speakUtterance:utterance];
                             
                             dispatch_async(dispatch_get_main_queue(), ^{
@@ -447,6 +491,7 @@
                             utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"fr-FR"];
                             utterance.rate = 0.5;
                             
+                            isRecognizing = NO;
                             [self.synthesizer speakUtterance:utterance];
                             
                             dispatch_async(dispatch_get_main_queue(), ^{
@@ -496,6 +541,7 @@
                                     utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"es-ES"];
                                     utterance.rate = 0.5;
                                     
+                                    isRecognizing = NO;
                                     [self.synthesizer speakUtterance:utterance];
                                     
                                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -525,6 +571,7 @@
                             utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"es-ES"];
                             utterance.rate = 0.5;
                             
+                            isRecognizing = NO;
                             [self.synthesizer speakUtterance:utterance];
                             
                             dispatch_async(dispatch_get_main_queue(), ^{
@@ -550,6 +597,7 @@
                             utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"es-ES"];
                             utterance.rate = 0.5;
                             
+                            isRecognizing = NO;
                             [self.synthesizer speakUtterance:utterance];
                             
                             dispatch_async(dispatch_get_main_queue(), ^{
@@ -600,44 +648,59 @@
         NSLog(@"Restart called");
         //Re-start speech recognition
         AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
-        if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusNotDetermined) {
-            NSLog(@"Asking for speech recognition permission...");
-            [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
-                if (status == SFSpeechRecognizerAuthorizationStatusAuthorized) {
-                    // isRecognizing = YES;
-                    if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionGranted) {
-                        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:@"Thank you for granting access to speech recognition. After the vibration, please say a command or tap the screen."];
-                        [self.synthesizer speakUtterance:utterance];
-                        // [self performSelector:@selector(beginNativeSpeechRecognition) withObject:nil afterDelay:0.01];
-                    } else if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionUndetermined) {
-                        AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"We also need access to your device's microphone. Please grant it now."];
-                        utterance.rate = 0.5;
-                        [self.synthesizer speakUtterance:utterance];
-                    }
+        if ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] == AVAuthorizationStatusNotDetermined) {
+            [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+                if (granted) {
+                    AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Thank you for granting access to your device's camera. Next, please grant access to speech recognition."];
+                    utterance.rate = 0.5;
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self setupCameraPreview];
+                    });
+                    
+                    [self.synthesizer speakUtterance:utterance];
                 }
             }];
-        } else if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusAuthorized) {
-            if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionGranted) {
-                NSLog(@"Access to both the microphone and speech recognition has been granted.");
-                [self performSelector:@selector(beginNativeSpeechRecognition) withObject:nil afterDelay:0.01];
-            } else if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionUndetermined) {
-                NSLog(@"Asking for access to the microphone...");
-                [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
-                    if (granted) {
-                        AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Thank you for granting access to your device's microphone. After the vibration, please say a command or tap the screen."];
-                        utterance.rate = 0.5;
-                        [self.synthesizer speakUtterance:utterance];
-                        
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-                            tapGestureRecognizer.delegate = self;
-                            [self.view addGestureRecognizer:tapGestureRecognizer];
-                            
-                            pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchToZoomRecognizer:)];
-                            [self.view addGestureRecognizer:pinchRecognizer];
-                        });
+        } else if ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] == AVAuthorizationStatusAuthorized) {
+            if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusNotDetermined) {
+                NSLog(@"Asking for speech recognition permission...");
+                [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
+                    if (status == SFSpeechRecognizerAuthorizationStatusAuthorized) {
+                        // isRecognizing = YES;
+                        if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionGranted) {
+                            AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:@"Thank you for granting access to speech recognition. After the vibration, please say a command or tap the screen."];
+                            [self.synthesizer speakUtterance:utterance];
+                            // [self performSelector:@selector(beginNativeSpeechRecognition) withObject:nil afterDelay:0.01];
+                        } else if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionUndetermined) {
+                            AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"We also need access to your device's microphone. Please grant it now."];
+                            utterance.rate = 0.5;
+                            [self.synthesizer speakUtterance:utterance];
+                        }
                     }
                 }];
+            } else if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusAuthorized) {
+                if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionGranted) {
+                    NSLog(@"Access to the microphone, speech recognition, and the camera have been granted.");
+                    [self performSelector:@selector(beginNativeSpeechRecognition) withObject:nil afterDelay:0.01];
+                } else if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionUndetermined) {
+                    NSLog(@"Asking for access to the microphone...");
+                    [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
+                        if (granted) {
+                            AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Thank you for granting access to your device's microphone. After the vibration, please say a command or tap the screen."];
+                            utterance.rate = 0.5;
+                            [self.synthesizer speakUtterance:utterance];
+                            
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+                                tapGestureRecognizer.delegate = self;
+                                [self.view addGestureRecognizer:tapGestureRecognizer];
+                                
+                                pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchToZoomRecognizer:)];
+                                [self.view addGestureRecognizer:pinchRecognizer];
+                            });
+                        }
+                    }];
+                }
             }
         }
     }
@@ -648,6 +711,13 @@
 }
 
 - (void)runNeuralNet {
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.neuralNetActivityIndicator startAnimating];
+        self.neuralNetActivityIndicator.hidden = NO;
+    });
+    
+    
     struct CGImage *cgImg = [self.vImage.image CGImage];
     
     VNImageRequestHandler *handler = [[VNImageRequestHandler alloc] initWithCGImage:cgImg options:nil];
@@ -708,6 +778,11 @@
             neuralNetworkResult = top.identifier;
             NSLog(@"Result: %@", top.identifier);
             
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.neuralNetActivityIndicator stopAnimating];
+                self.neuralNetActivityIndicator.hidden = YES;
+            });
+            
             [self speakResults];
         }
     } else {
@@ -718,6 +793,9 @@
 
 - (void)speakResults {
     //speak results
+    
+    isRecognizing = NO;
+    touchesActive = NO;
     
     if ([recognitionLanguage isEqualToString:@"English"]) {
         //Speak in English
@@ -734,7 +812,6 @@
         [utterance setVoice:[AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"]];
         [utterance setRate:.5];
         
-        isRecognizing = NO;
         [self.synthesizer speakUtterance:utterance];
     }
     else if ([recognitionLanguage isEqualToString:@"French"]) {
@@ -810,11 +887,6 @@
         settings = [[AVCapturePhotoSettings alloc] init];
     }
     settings.flashMode = AVCaptureFlashModeAuto;
-    
-    isRecording = NO;
-    if (!isRecording) {
-        NSLog(@"The screen should not longer be receiving taps.");
-    }
     [photoOutput capturePhotoWithSettings:settings delegate:self];
     
     // Deprecated code
@@ -843,7 +915,11 @@
 - (void)captureOutput:(AVCapturePhotoOutput *)output didCapturePhotoForResolvedSettings:(AVCaptureResolvedPhotoSettings *)resolvedSettings {
     NSLog(@"Terminating speech recognition...");
     
+    isRecording = NO;
+    isRecognizing = YES;
+    
     [self.audioEngine stop];
+    [self.request endAudio];
     [inputNode removeTapOnBus:0];
     
     self.request = nil;
@@ -887,6 +963,10 @@
         self.recognitionTask = nil;
     }
     
+    if (inputNode.numberOfOutputs > 0) {
+        [inputNode removeTapOnBus:0];
+    }
+    
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
     [audioSession setMode:AVAudioSessionModeSpokenAudio error:nil];
@@ -927,7 +1007,6 @@
 }
 
 - (void)processSpeech {
-    isRecognizing = YES;
     NSLog(@"Recognized text: %@", recognizedText);
     
     if ([recognizedText containsString:@"in French"]) {
@@ -1024,6 +1103,8 @@
         }
     }
 }
+
+#pragma mark - Speech recognition delegate
 
 - (void)speechRecognitionTask:(SFSpeechRecognitionTask *)task didFinishRecognition:(SFSpeechRecognitionResult *)recognitionResult {
     NSLog(@"The speech recognition is finished.");
