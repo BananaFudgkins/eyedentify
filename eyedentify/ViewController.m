@@ -197,15 +197,15 @@
             isRecording = NO;
         }
         
-    } else if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusNotDetermined) {
-        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:@"Welcome to eyedentify. Before you can begin using the app, please grant access to speech recognition."];
+    } /* else if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusNotDetermined) {
+        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:@"Please grant access to speech recognition so we can recognize voice commands."];
         [utterance setRate:0.5];
         [self.synthesizer speakUtterance:utterance];
         
         touchesActive = NO;
         
         isRecording = NO;
-    } else if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusDenied || [SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusRestricted) {
+     }*/ else if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusDenied || [SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusRestricted) {
         AVSpeechSynthesizer *uhOhSynth = [[AVSpeechSynthesizer alloc] init];
         AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"You have denied or restricted access to speech recognition. Please grant permission in Settings and try again."];
         utterance.rate = 0.5;
