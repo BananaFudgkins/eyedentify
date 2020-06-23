@@ -90,11 +90,15 @@
                                         self.view.bounds.size.height - self.adBannerView.bounds.size.height);
         
         [captureSession commitConfiguration];
+        
+        if (!captureSession.isRunning) {
+            [self checkSpeechRecognitionPermission];
+        }
+        
         [captureSession startRunning];
         
         [self.view.layer insertSublayer:previewLayer atIndex:0];
         [self.view addSubview:self.neuralNetActivityIndicator];
-        [self checkSpeechRecognitionPermission];
     } else {
         self.noCameraLabel.hidden = NO;
     }
@@ -141,7 +145,45 @@
     //Initialize live camera preview
     
     if ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] == AVAuthorizationStatusAuthorized) {
-        [self setupCameraPreview];
+        if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusAuthorized) {
+            if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionGranted) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self setupCameraPreview];
+                });
+            } else if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionUndetermined) {
+                AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Welcome to Eyedentify. Before you can begin using the app, please grant access to your device's microphone."];
+                utterance.rate = 0.5;
+                
+                [self.synthesizer speakUtterance:utterance];
+                
+                touchesActive = NO;
+                
+                isRecording = NO;
+            } else if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionDenied) {
+                AVSpeechSynthesizer *uhOhSynth = [[AVSpeechSynthesizer alloc] init];
+                AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Welcome to Eyedentify. You have denied access to your device's microphone. Please grant permission in Settings and try again."];
+                utterance.rate = 0.5;
+                
+                [uhOhSynth speakUtterance:utterance];
+                [captureSession stopRunning];
+            }
+        } else if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusNotDetermined) {
+            AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Welcome to Eyedentify. Before you can begin using the app, please grant access to speech recognition."];
+            utterance.rate = 0.5;
+            
+            [self.synthesizer speakUtterance:utterance];
+            
+            touchesActive = NO;
+            
+            isRecording = NO;
+        } else if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusDenied) {
+            AVSpeechSynthesizer *uhOhSynth = [[AVSpeechSynthesizer alloc] init];
+            AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Welcome to Eyedentify. You have denied access to speech recognition. Please grant permission in Settings and try again."];
+            utterance.rate = 0.5;
+            
+            [uhOhSynth speakUtterance:utterance];
+            [captureSession stopRunning];
+        }
     } else if ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] == AVAuthorizationStatusNotDetermined) {
         AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Welcome to Eyedentify. Before you can begin using the app, please grant access to your camera so you can take pictures of the objects around you."];
         utterance.rate = 0.5;
@@ -157,6 +199,7 @@
         utterance.rate = 0.5;
         
         [uhOhSynth speakUtterance:utterance];
+        [captureSession stopRunning];
         
         touchesActive = NO;
         
@@ -195,8 +238,14 @@
             touchesActive = NO;
             
             isRecording = NO;
+        } else if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionDenied) {
+            AVSpeechSynthesizer *uhOhSynth = [[AVSpeechSynthesizer alloc] init];
+            AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"You have denied access to your device's microphone. Please grant permission in Settings and try again."];
+            utterance.rate = 0.5;
+            
+            [uhOhSynth speakUtterance:utterance];
+            [captureSession stopRunning];
         }
-        
     } /* else if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusNotDetermined) {
         AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:@"Please grant access to speech recognition so we can recognize voice commands."];
         [utterance setRate:0.5];
@@ -659,9 +708,21 @@
                     });
                     
                     [self.synthesizer speakUtterance:utterance];
+                } else {
+                    AVSpeechSynthesizer *uhOhSynth = [[AVSpeechSynthesizer alloc] init];
+                    AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"You have denied access to your device's camera. Please grant permission in Settings and try again."];
+                    utterance.rate = 0.5;
+                    
+                    [uhOhSynth speakUtterance:utterance];
+                    [captureSession stopRunning];
                 }
             }];
         } else if ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] == AVAuthorizationStatusAuthorized) {
+            if (!captureSession.isRunning) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self setupCameraPreview];
+                });
+            }
             if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusNotDetermined) {
                 NSLog(@"Asking for speech recognition permission...");
                 [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
@@ -676,6 +737,13 @@
                             utterance.rate = 0.5;
                             [self.synthesizer speakUtterance:utterance];
                         }
+                    } else {
+                        AVSpeechSynthesizer *uhOhSynth = [[AVSpeechSynthesizer alloc] init];
+                        AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"You have denied access to speech recognition. Please grant permission in Settings and try again."];
+                        utterance.rate = 0.5;
+                        
+                        [uhOhSynth speakUtterance:utterance];
+                        [captureSession stopRunning];
                     }
                 }];
             } else if ([SFSpeechRecognizer authorizationStatus] == SFSpeechRecognizerAuthorizationStatusAuthorized) {
@@ -698,6 +766,13 @@
                                 pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchToZoomRecognizer:)];
                                 [self.view addGestureRecognizer:pinchRecognizer];
                             });
+                        } else {
+                            AVSpeechSynthesizer *uhOhSynth = [[AVSpeechSynthesizer alloc] init];
+                            AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"You have denied access to your device's microphone. Please grant permission in Settings and try again."];
+                            utterance.rate = 0.5;
+                            
+                            [uhOhSynth speakUtterance:utterance];
+                            [captureSession stopRunning];
                         }
                     }];
                 }
