@@ -119,8 +119,8 @@
     
     ciContext = [CIContext contextWithMTLDevice:device]; */
     
-    SqueezeNet *squeezeNet = [[SqueezeNet alloc] init];
-    VNCoreMLModel *model = [VNCoreMLModel modelForMLModel:squeezeNet.model error:nil];
+    MobileNetV2 *mobileNet = [[MobileNetV2 alloc] init];
+    VNCoreMLModel *model = [VNCoreMLModel modelForMLModel:mobileNet.model error:nil];
     self.classificationRequest = [[VNCoreMLRequest alloc] initWithModel:model completionHandler:^(VNRequest * _Nonnull request, NSError * _Nullable error) {
         if (!error) {
             [self processClassificationsForRequest:request error:error];

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00445A8A249ABC42000AF0DB /* SqueezeNet.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 00445A89249ABC42000AF0DB /* SqueezeNet.mlmodel */; };
+		000FD70C259AEE87004CADC3 /* MobileNetV2.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 000FD70B259AEE87004CADC3 /* MobileNetV2.mlmodel */; };
 		005DC77F2499539F00007D73 /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 005DC77E2499539F00007D73 /* Vision.framework */; };
 		005DC781249953B900007D73 /* CoreML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 005DC780249953B900007D73 /* CoreML.framework */; };
 		00C18173249AA2BB00070E8C /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 00C18172249AA2BB00070E8C /* Reachability.m */; };
@@ -53,7 +53,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		00445A89249ABC42000AF0DB /* SqueezeNet.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = SqueezeNet.mlmodel; sourceTree = "<group>"; };
+		000FD70B259AEE87004CADC3 /* MobileNetV2.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = MobileNetV2.mlmodel; sourceTree = "<group>"; };
 		005DC77E2499539F00007D73 /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
 		005DC780249953B900007D73 /* CoreML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreML.framework; path = System/Library/Frameworks/CoreML.framework; sourceTree = SDKROOT; };
 		00C18171249AA2BA00070E8C /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -140,7 +140,7 @@
 		005DC77B2499536A00007D73 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				00445A89249ABC42000AF0DB /* SqueezeNet.mlmodel */,
+				000FD70B259AEE87004CADC3 /* MobileNetV2.mlmodel */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -539,10 +539,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				000FD70C259AEE87004CADC3 /* MobileNetV2.mlmodel in Sources */,
 				AC22EC201E2AF0D0003433D1 /* ViewController.m in Sources */,
 				AC22EC1D1E2AF0D0003433D1 /* AppDelegate.m in Sources */,
 				00C18173249AA2BB00070E8C /* Reachability.m in Sources */,
-				00445A8A249ABC42000AF0DB /* SqueezeNet.mlmodel in Sources */,
 				AC22EC1A1E2AF0D0003433D1 /* main.m in Sources */,
 				AC7E5E741E2AF15800EAFCA5 /* OverlayViewController.m in Sources */,
 			);
