@@ -17,7 +17,6 @@
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
 #import <Speech/Speech.h>
-#import <GoogleMobileAds/GoogleMobileAds.h>
 #import <Vision/Vision.h>
 #import <CoreML/CoreML.h>
 #import <MLKitTranslate/MLKitTranslate.h>
