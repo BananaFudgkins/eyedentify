@@ -37,7 +37,6 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *recognizedObjectLabel;
 @property (strong, nonatomic) IBOutlet UILabel *noCameraLabel;
-@property (strong, nonatomic) IBOutlet GADBannerView *adBannerView;
 @property (strong, nonatomic) IBOutlet UIView *cameraView;
 
 @property (strong, nonatomic) SFSpeechRecognizer *recognizer;

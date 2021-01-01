@@ -53,14 +53,6 @@
     self.neuralNetActivityIndicator.hidden = YES;
     
     // Do any additional setup after loading the view, typically from a nib.
-    
-#ifdef DEBUG
-    self.adBannerView.adUnitID = @"ca-app-pub-3940256099942544/2934735716"; // Unit ID is for debug. Change for release and vice versa.
-#else
-    self.adBannerView.adUnitID = @"ca-app-pub-4329905567201043/8988070404"; // Unit ID for release.
-#endif
-    
-    [self.adBannerView loadRequest:[GADRequest request]];
 }
 
 - (void)setupCameraPreview {
@@ -87,7 +79,7 @@
         previewLayer.frame = CGRectMake(0,
                                         0,
                                         self.view.bounds.size.width,
-                                        self.view.bounds.size.height - self.adBannerView.bounds.size.height);
+                                        self.view.bounds.size.height);
         
         [captureSession commitConfiguration];
         
