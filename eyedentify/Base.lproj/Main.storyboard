@@ -4,7 +4,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -65,16 +64,6 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DQW-mX-4TO" customClass="GADBannerView">
-                                <rect key="frame" x="0.0" y="518" width="320" height="50"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="DQW-mX-4TO" secondAttribute="height" multiplier="32:5" id="na5-xK-N6r"/>
-                                </constraints>
-                                <connections>
-                                    <outlet property="rootViewController" destination="BYZ-38-t0r" id="DNc-2O-p2P"/>
-                                </connections>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="scrollViewTexturedBackgroundColor"/>
                         <gestureRecognizers/>
@@ -82,19 +71,15 @@
                             <constraint firstItem="6Sy-1K-xUf" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="9O0-h9-6Yh"/>
                             <constraint firstItem="n4h-Bx-bcr" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="IUh-iQ-e1O"/>
                             <constraint firstItem="n4h-Bx-bcr" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="NeX-RZ-Dl6"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="DQW-mX-4TO" secondAttribute="bottom" id="Q86-BV-4ea"/>
                             <constraint firstItem="TVn-Cu-UM9" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="40" id="UEu-BK-zge"/>
                             <constraint firstItem="6Sy-1K-xUf" firstAttribute="top" secondItem="TVn-Cu-UM9" secondAttribute="bottom" constant="31" id="Y0f-64-u3U"/>
                             <constraint firstItem="TVn-Cu-UM9" firstAttribute="centerX" secondItem="6Sy-1K-xUf" secondAttribute="centerX" id="cV3-Xq-Eo8"/>
                             <constraint firstItem="6Sy-1K-xUf" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="133" id="fQ8-e8-MfM"/>
-                            <constraint firstAttribute="trailing" secondItem="DQW-mX-4TO" secondAttribute="trailing" id="kea-fi-an2"/>
-                            <constraint firstItem="DQW-mX-4TO" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="kjg-Cj-ZTG"/>
                             <constraint firstItem="TVn-Cu-UM9" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="51" id="l5W-CH-KKB"/>
                             <constraint firstItem="6Sy-1K-xUf" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="21" id="ydM-12-VVJ"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="adBannerView" destination="DQW-mX-4TO" id="6kU-sd-h07"/>
                         <outlet property="noCameraLabel" destination="n4h-Bx-bcr" id="1rv-tM-Th0"/>
                         <outlet property="recognizedObjectLabel" destination="6Sy-1K-xUf" id="tUe-BZ-t9D"/>
                     </connections>
@@ -107,9 +92,6 @@
     <resources>
         <systemColor name="scrollViewTexturedBackgroundColor">
             <color red="0.43529411764705878" green="0.44313725490196082" blue="0.47450980392156861" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
     </resources>
 </document>
