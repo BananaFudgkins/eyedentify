@@ -784,18 +784,19 @@
         self.neuralNetActivityIndicator.hidden = NO;
     });
     
-    
     struct CGImage *cgImg = [self.vImage.image CGImage];
     
-    VNImageRequestHandler *handler = [[VNImageRequestHandler alloc] initWithCGImage:cgImg options:nil];
-    NSError *error;
-    
-    @try {
-        NSLog(@"Putting out a request to the neural net...");
-        [handler performRequests:@[self.classificationRequest] error:&error];
-    } @catch (NSException *exception) {
-        NSLog(@"Unable to classify image: %@", error.localizedDescription);
-    }
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+        VNImageRequestHandler *handler = [[VNImageRequestHandler alloc] initWithCGImage:cgImg options:nil];
+            NSError *error;
+            
+            @try {
+                NSLog(@"Putting out a request to the neural net...");
+                [handler performRequests:@[self.classificationRequest] error:&error];
+            } @catch (NSException *exception) {
+                NSLog(@"Unable to classify image: %@", error.localizedDescription);
+            }
+    });
 }
 
 - (void)processClassificationsForRequest:(VNCoreMLRequest *) request error:(NSError *)error {
