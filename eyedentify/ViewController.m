@@ -954,7 +954,11 @@
     } else {
         settings = [[AVCapturePhotoSettings alloc] init];
     }
-    settings.flashMode = AVCaptureFlashModeAuto;
+    if (captureDevice.hasFlash) {
+        settings.flashMode = AVCaptureFlashModeAuto;
+    } else {
+        settings.flashMode = AVCaptureFlashModeOff;
+    }
     [photoOutput capturePhotoWithSettings:settings delegate:self];
     
     // Deprecated code
