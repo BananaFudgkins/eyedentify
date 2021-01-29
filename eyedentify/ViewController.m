@@ -476,34 +476,37 @@
                         self.recognizedObjectLabel.hidden = NO;
                     });
                     
-                    MLKModelDownloadConditions *conditions = [[MLKModelDownloadConditions alloc] initWithAllowsCellularAccess:NO
-                                                                                                  allowsBackgroundDownloading:YES];
-                    [translator downloadModelIfNeededWithConditions:conditions completion:^(NSError * _Nullable error) {
-                        if (!error) {
-                            [translator translateText:neuralNetworkResult completion:^(NSString * _Nullable result, NSError * _Nullable error) {
-                                if (result) {
-                                    AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:result];
-                                    utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"fr-FR"];
-                                    utterance.rate = 0.5;
-                                    
-                                    isRecognizing = NO;
-                                    [self.synthesizer speakUtterance:utterance];
-                                    
-                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                        self.recognizedObjectLabel.text = result;
-                                    });
-                                    
-                                    NSTimer *timer;
-                                    timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(hideLabel) userInfo:nil repeats:NO];
-                                }
-                            }];
-                        } else {
-                            AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Something went wrong when trying to download translations. Please check your internet connection and try again."];
-                            utterance.rate = 0.5;
-                            
-                            [self.synthesizer speakUtterance:utterance];
-                        }
-                    }];
+                    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+                        
+                        MLKModelDownloadConditions *conditions = [[MLKModelDownloadConditions alloc] initWithAllowsCellularAccess:NO
+                                                                                                                          allowsBackgroundDownloading:YES];
+                                            [translator downloadModelIfNeededWithConditions:conditions completion:^(NSError * _Nullable error) {
+                                                if (!error) {
+                                                    [translator translateText:neuralNetworkResult completion:^(NSString * _Nullable result, NSError * _Nullable error) {
+                                                        if (result) {
+                                                            AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:result];
+                                                            utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"fr-FR"];
+                                                            utterance.rate = 0.5;
+                                                            
+                                                            isRecognizing = NO;
+                                                            [self.synthesizer speakUtterance:utterance];
+                                                            
+                                                            dispatch_async(dispatch_get_main_queue(), ^{
+                                                                self.recognizedObjectLabel.text = result;
+                                                            });
+                                                            
+                                                            NSTimer *timer;
+                                                            timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(hideLabel) userInfo:nil repeats:NO];
+                                                        }
+                                                    }];
+                                                } else {
+                                                    AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Something went wrong when trying to download translations. Please check your internet connection and try again."];
+                                                    utterance.rate = 0.5;
+                                                    
+                                                    [self.synthesizer speakUtterance:utterance];
+                                                }
+                                            }];
+                    });
                 } else {
                     [translator translateText:neuralNetworkResult completion:^(NSString * _Nullable result, NSError * _Nullable error) {
                         if (result) {
@@ -572,39 +575,41 @@
                         self.recognizedObjectLabel.hidden = NO;
                     });
                     
-                    MLKModelDownloadConditions *conditions = [[MLKModelDownloadConditions alloc] initWithAllowsCellularAccess:NO
-                                                                                                  allowsBackgroundDownloading:YES];
-                    [translator downloadModelIfNeededWithConditions:conditions completion:^(NSError * _Nullable error) {
-                        if (!error) {
-                            [translator translateText:neuralNetworkResult completion:^(NSString * _Nullable result, NSError * _Nullable error) {
-                                if (result) {
-                                    AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:result];
-                                    utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"es-ES"];
-                                    utterance.rate = 0.5;
-                                    
-                                    isRecognizing = NO;
-                                    [self.synthesizer speakUtterance:utterance];
-                                    
-                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                        self.recognizedObjectLabel.text = result;
-                                    });
-                                    
-                                    NSTimer *timer;
-                                    timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(hideLabel) userInfo:nil repeats:NO];
-                                } else {
-                                    AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Something went wrong when trying to translate. Please try again."];
-                                    utterance.rate = 0.5;
-                                    
-                                    [self.synthesizer speakUtterance:utterance];
-                                }
-                            }];
-                        } else {
-                            AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Something went wrong when trying to download translations. Please check your internet connection and try again."];
-                            utterance.rate = 0.5;
-                            
-                            [self.synthesizer speakUtterance:utterance];
-                        }
-                    }];
+                    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+                        MLKModelDownloadConditions *conditions = [[MLKModelDownloadConditions alloc] initWithAllowsCellularAccess:NO
+                                                                                                                          allowsBackgroundDownloading:YES];
+                                            [translator downloadModelIfNeededWithConditions:conditions completion:^(NSError * _Nullable error) {
+                                                if (!error) {
+                                                    [translator translateText:neuralNetworkResult completion:^(NSString * _Nullable result, NSError * _Nullable error) {
+                                                        if (result) {
+                                                            AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:result];
+                                                            utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"es-ES"];
+                                                            utterance.rate = 0.5;
+                                                            
+                                                            isRecognizing = NO;
+                                                            [self.synthesizer speakUtterance:utterance];
+                                                            
+                                                            dispatch_async(dispatch_get_main_queue(), ^{
+                                                                self.recognizedObjectLabel.text = result;
+                                                            });
+                                                            
+                                                            NSTimer *timer;
+                                                            timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(hideLabel) userInfo:nil repeats:NO];
+                                                        } else {
+                                                            AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Something went wrong when trying to translate. Please try again."];
+                                                            utterance.rate = 0.5;
+                                                            
+                                                            [self.synthesizer speakUtterance:utterance];
+                                                        }
+                                                    }];
+                                                } else {
+                                                    AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@"Something went wrong when trying to download translations. Please check your internet connection and try again."];
+                                                    utterance.rate = 0.5;
+                                                    
+                                                    [self.synthesizer speakUtterance:utterance];
+                                                }
+                                            }];
+                    });
                 } else {
                     [translator translateText:neuralNetworkResult completion:^(NSString * _Nullable result, NSError * _Nullable error) {
                         if (result) {
